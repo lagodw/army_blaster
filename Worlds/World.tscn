@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://units/ArmyDude.tscn" type="PackedScene" id=1]
+
+[node name="World" type="Node2D"]
+
+[node name="ArmyDude" parent="." instance=ExtResource( 1 )]
+position = Vector2( 744.001, 132.506 )
+
+[node name="ArmyDude2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 613.894, 451.542 )
+script = null
+
+[node name="ArmyDude3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 178.316, 451.542 )
+player = "P2"
