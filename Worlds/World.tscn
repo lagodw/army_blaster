@@ -1,16 +1,29 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://units/ArmyDude.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Worlds/World.gd" type="Script" id=2]
+[ext_resource path="res://buildings/Barracks.tscn" type="PackedScene" id=3]
 
 [node name="World" type="Node2D"]
+script = ExtResource( 2 )
 
 [node name="ArmyDude" parent="." instance=ExtResource( 1 )]
 position = Vector2( 744.001, 132.506 )
 
 [node name="ArmyDude2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 613.894, 451.542 )
-script = null
+position = Vector2( 754.079, 584.579 )
+player = "P2"
 
 [node name="ArmyDude3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 178.316, 451.542 )
-player = "P2"
+position = Vector2( -101.171, 16.5962 )
+
+[node name="Barracks" parent="." instance=ExtResource( 3 )]
+position = Vector2( 115.629, 584.579 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 513.094, 300.887 )
+current = true
+zoom = Vector2( 2, 2 )
+
+[node name="ArmyDude4" parent="." instance=ExtResource( 1 )]
+position = Vector2( 8.64575, -196.058 )
