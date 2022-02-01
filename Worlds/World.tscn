@@ -1,29 +1,84 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://units/ArmyDude.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Worlds/World.gd" type="Script" id=2]
 [ext_resource path="res://buildings/Barracks.tscn" type="PackedScene" id=3]
+[ext_resource path="res://themes/lifebar_foreground_white.png" type="Texture" id=4]
+[ext_resource path="res://themes/lifebar_background.png" type="Texture" id=5]
+[ext_resource path="res://buildings/barracks.png" type="Texture" id=6]
+[ext_resource path="res://buildings/Barracks.gd" type="Script" id=7]
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 183.001, 132.056 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 443.511
 
 [node name="World" type="Node2D"]
 script = ExtResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 1042.83, 110.196 )
+current = true
+zoom = Vector2( 4, 4 )
 
 [node name="ArmyDude" parent="." instance=ExtResource( 1 )]
 position = Vector2( 744.001, 132.506 )
 
 [node name="ArmyDude2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 754.079, 584.579 )
+position = Vector2( 1787.52, 912.43 )
 player = "P2"
 
 [node name="ArmyDude3" parent="." instance=ExtResource( 1 )]
 position = Vector2( -101.171, 16.5962 )
 
-[node name="Barracks" parent="." instance=ExtResource( 3 )]
-position = Vector2( 115.629, 584.579 )
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 513.094, 300.887 )
-current = true
-zoom = Vector2( 2, 2 )
-
 [node name="ArmyDude4" parent="." instance=ExtResource( 1 )]
-position = Vector2( 8.64575, -196.058 )
+position = Vector2( 160.408, -234.621 )
+
+[node name="Barracks2" type="KinematicBody2D" parent="."]
+position = Vector2( 1466.16, 938.061 )
+script = ExtResource( 7 )
+
+[node name="icon" type="Sprite" parent="Barracks2"]
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 6 )
+
+[node name="BlockUnit" type="CollisionShape2D" parent="Barracks2"]
+shape = SubResource( 7 )
+
+[node name="CaptureZone" type="Area2D" parent="Barracks2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Barracks2/CaptureZone"]
+shape = SubResource( 2 )
+
+[node name="SpawnTimer" type="Timer" parent="Barracks2"]
+autostart = true
+
+[node name="CaptureTimer" type="Timer" parent="Barracks2"]
+wait_time = 0.5
+autostart = true
+
+[node name="Progress" type="TextureProgress" parent="Barracks2"]
+margin_left = -214.368
+margin_top = 130.125
+margin_right = -22.3676
+margin_bottom = 170.125
+rect_rotation = -90.0
+texture_under = ExtResource( 5 )
+texture_progress = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Rally" type="Position2D" parent="Barracks2"]
+position = Vector2( 525.629, 318.707 )
+
+[node name="SpawnPoint" type="Position2D" parent="Barracks2"]
+position = Vector2( 247.355, 171.246 )
+
+[node name="ArmyDude5" parent="." instance=ExtResource( 1 )]
+position = Vector2( 1744.12, 1176.82 )
+player = "P2"
+
+[node name="Barracks" parent="." instance=ExtResource( 3 )]
+position = Vector2( 284.553, 53.3888 )

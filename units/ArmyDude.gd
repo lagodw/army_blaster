@@ -3,7 +3,7 @@ extends KinematicBody2D
 export (int) var speed = 500
 export (PackedScene) var Bullet = preload("res://units/Bullet.tscn")
 
-var target = Vector2()
+var target = Vector2(0, 0)
 var velocity = Vector2()
 var last_position = Vector2()
 
@@ -15,7 +15,8 @@ var hitpoints = 1
 func _ready():
 	$Timer.wait_time = Global.timer
 	
-	target = self.position
+	if target == Vector2(0, 0):
+		target = self.position
 	last_position = self.position
 	
 	$Health.max_value = 100
@@ -86,18 +87,22 @@ func combine_army(army):
 						new_units[unit] += army.army_units[unit]
 					else:
 						new_units[unit] = army.army_units[unit]
+						
+				var was_selected = false
 				for unit in get_parent().selected:
-					if unit.collider == self:
+					if unit.collider == self or unit.collider == army:
 						get_parent().selected.erase(unit)
-				get_parent().selected.append_array([{'collider': self}])
-				self.select()
+						was_selected = true
+				if was_selected:
+					get_parent().selected.append_array([{'collider': self}])
+					self.select()
 				army_units = new_units
+				var new_position = (position + army.position) / 2
+				position = new_position
 				army.queue_free()
 				update_counter()
-			else:
-				for unit in get_parent().selected:
-					if unit.collider == self:
-						get_parent().selected.erase(unit)
+				print(get_parent().selected)
+
 
 func update_counter():
 	var count = 0

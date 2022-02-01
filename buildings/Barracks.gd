@@ -1,8 +1,10 @@
 extends KinematicBody2D
 
 var player = "P0"
-var max_status = 100
+var max_status = 10
 var capture_status
+
+export (PackedScene) var Marine = preload("res://units/ArmyDude.tscn")
 
 func _ready():
 
@@ -10,9 +12,11 @@ func _ready():
 	$Progress.max_value = max_status
 	$Progress.value = capture_status
 
-	$Timer.wait_time = Global.timer
-	$Timer.connect('timeout', self, '_on_timeout')
+	$CaptureTimer.wait_time = Global.timer
+	$CaptureTimer.connect('timeout', self, '_on_timeout')
 	update_owner()
+	
+	$SpawnTimer.connect('timeout', self, 'spawn_marine')
 	
 func _on_timeout():
 	var units = $CaptureZone.get_overlapping_bodies()
@@ -52,3 +56,11 @@ func update_owner():
 	else:
 		get_node('icon').modulate = Color.gray
 		$Progress.tint_progress = Color.gray
+
+func spawn_marine():
+	if player != 'P0':
+		var unit = Marine.instance()
+		unit.position = $SpawnPoint.position
+		unit.player = player
+		unit.target = $Rally.position
+		get_parent().add_child(unit)
