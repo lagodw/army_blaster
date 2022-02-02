@@ -27,6 +27,7 @@ shape = SubResource( 7 )
 shape = SubResource( 2 )
 
 [node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 5.0
 autostart = true
 
 [node name="CaptureTimer" type="Timer" parent="."]

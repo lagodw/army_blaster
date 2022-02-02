@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 var player = "P0"
-var max_status = 10
+var max_status = 100
 var capture_status
 
 export (PackedScene) var Marine = preload("res://units/ArmyDude.tscn")
@@ -60,7 +60,7 @@ func update_owner():
 func spawn_marine():
 	if player != 'P0':
 		var unit = Marine.instance()
-		unit.position = $SpawnPoint.position
+		unit.global_position = $SpawnPoint.global_position
 		unit.player = player
-		unit.target = $Rally.position
+		unit.target = $Rally.global_position
 		get_parent().add_child(unit)

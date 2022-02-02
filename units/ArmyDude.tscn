@@ -16,7 +16,7 @@ font_data = ExtResource( 4 )
 radius = 92.5279
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 63.1169, 47.7668 )
+extents = Vector2( 8, 8 )
 
 [node name="ArmyDude" type="KinematicBody2D" groups=[
 "unit",
@@ -92,3 +92,5 @@ texture_progress = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Line2D" type="Line2D" parent="."]

@@ -1,6 +1,10 @@
 extends KinematicBody2D
 
 export (int) var speed = 500
+var path : PoolVector2Array
+var levelNavigation
+var index = 0
+
 export (PackedScene) var Bullet = preload("res://units/Bullet.tscn")
 
 var target = Vector2(0, 0)
@@ -11,6 +15,8 @@ export var player = "P1"
 
 var army_units = {'marine': 1}
 var hitpoints = 1
+
+onready var line = $Line2D
 
 func _ready():
 	$Timer.wait_time = Global.timer
@@ -37,17 +43,67 @@ func _ready():
 		get_node("NumOutline").modulate = Color.red
 		get_node("UnitCount").add_color_override("font_color", Color.red)
 	update_counter()
+	
+	generate_path()
+	
+	yield(get_tree(), "idle_frame")
+	if get_tree().has_group('Navigation'):
+		levelNavigation = get_tree().get_nodes_in_group('Navigation')[0]
 
 
 func _input(event):
 	if event.is_action_pressed('click') and $Outline.visible == true:
 		target = get_global_mouse_position()
 
+#func _physics_process(delta):
+#	velocity = (target - position).normalized() * speed
+#	$Rotating.rotation = velocity.angle()
+#	if (target - position).length() > 10:
+#		velocity = move_and_slide(velocity)
+
+#func _physics_process(delta):
+#	line.global_position = Vector2.ZERO
+#	if levelNavigation and target:
+#		generate_path()
+#		navigate()
+#	move()
+
 func _physics_process(delta):
-	velocity = (target - position).normalized() * speed
-	$Rotating.rotation = velocity.angle()
-	if (target - position).length() > 10:
-		velocity = move_and_slide(velocity)
+	generate_path()
+	if path:
+		var vel : Vector2
+
+		if index < path.size()-1:
+			vel = path[index+1] - path[index]
+			if close_to_target(global_position, path[index+1]):
+				index += 1
+		else:
+			vel = Vector2.ZERO
+		vel = move_and_slide(vel.normalized()*speed)
+
+func close_to_target(a, b):
+	var res := false
+	var mar := 5
+	if (abs(abs(a.x) - abs(b.x)) < mar) and (abs(abs(a.y) - abs(b.y)) < mar):
+		res = true
+	return res
+	
+func move():
+	velocity = move_and_slide(velocity)
+
+func navigate():
+	if path.size() > 0:
+		velocity = global_position.direction_to(path[1]) * speed
+				
+		if global_position == path[0]:
+			pass
+#			print(typeof(path))
+#			path.pop_front()
+
+func generate_path():
+	if levelNavigation != null:
+		path = levelNavigation.get_simple_path(global_position, target, false)
+		line.points = path
 
 func _on_timeout():
 	var units_in_range = $Rotating/UnitDetection.get_overlapping_bodies()
@@ -89,19 +145,23 @@ func combine_army(army):
 						new_units[unit] = army.army_units[unit]
 						
 				var was_selected = false
+				var remove_unit = []
 				for unit in get_parent().selected:
 					if unit.collider == self or unit.collider == army:
-						get_parent().selected.erase(unit)
+						remove_unit.append(unit)
 						was_selected = true
+				for unit in remove_unit:
+					get_parent().selected.erase(unit)
 				if was_selected:
 					get_parent().selected.append_array([{'collider': self}])
 					self.select()
+				
 				army_units = new_units
 				var new_position = (position + army.position) / 2
 				position = new_position
 				army.queue_free()
 				update_counter()
-				print(get_parent().selected)
+
 
 
 func update_counter():

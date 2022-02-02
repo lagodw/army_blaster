@@ -46,6 +46,11 @@ func _unhandled_input(event):
 	if event is InputEventMouseMotion and dragging:
 		update()
 		
+#	if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT and event.pressed:
+#		for unit in selected:
+#			var new_path = $Navigation2D.get_simple_path(unit.collider.global_position, event.global_position)
+#			unit.path = new_path
+	
 func _draw():
 	if dragging:
 		draw_rect(Rect2(drag_start, get_global_mouse_position() - drag_start),
