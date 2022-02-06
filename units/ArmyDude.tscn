@@ -8,15 +8,15 @@
 [ext_resource path="res://themes/lifebar_foreground_white.png" type="Texture" id=6]
 [ext_resource path="res://themes/lifebar_background.png" type="Texture" id=7]
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=1]
 size = 24
 font_data = ExtResource( 4 )
 
-[sub_resource type="CircleShape2D" id=3]
+[sub_resource type="CircleShape2D" id=2]
 radius = 92.5279
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 8, 8 )
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 56, 40 )
 
 [node name="ArmyDude" type="KinematicBody2D" groups=[
 "unit",
@@ -28,7 +28,7 @@ margin_left = -7.92171
 margin_top = -115.91
 margin_right = 10.0783
 margin_bottom = -87.9098
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
 text = "1"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -66,10 +66,10 @@ autostart = true
 [node name="CombineArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CombineArea"]
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 
 [node name="UnitBox" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+shape = SubResource( 3 )
 
 [node name="Outline" type="Sprite" parent="."]
 visible = false
@@ -92,5 +92,3 @@ texture_progress = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Line2D" type="Line2D" parent="."]

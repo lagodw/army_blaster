@@ -1,13 +1,16 @@
 extends KinematicBody2D
 
 export (int) var speed = 500
-var path : PoolVector2Array
-var levelNavigation
-var index = 0
-
 export (PackedScene) var Bullet = preload("res://units/Bullet.tscn")
 
-var target = Vector2(0, 0)
+#var target = Vector2(0, 0)
+enum STATES { IDLE, FOLLOW }
+var _state = null
+
+var path = []
+var target_point_world = Vector2()
+var target_position = Vector2()
+
 var velocity = Vector2()
 var last_position = Vector2()
 
@@ -16,13 +19,13 @@ export var player = "P1"
 var army_units = {'marine': 1}
 var hitpoints = 1
 
-onready var line = $Line2D
+
 
 func _ready():
 	$Timer.wait_time = Global.timer
 	
-	if target == Vector2(0, 0):
-		target = self.position
+#	if target == Vector2(0, 0):
+#		target = self.position
 	last_position = self.position
 	
 	$Health.max_value = 100
@@ -43,73 +46,59 @@ func _ready():
 		get_node("NumOutline").modulate = Color.red
 		get_node("UnitCount").add_color_override("font_color", Color.red)
 	update_counter()
-	
-	generate_path()
-	
-	yield(get_tree(), "idle_frame")
-	if get_tree().has_group('Navigation'):
-		levelNavigation = get_tree().get_nodes_in_group('Navigation')[0]
+
+	if target_position.length() >0:
+		_change_state(STATES.FOLLOW)
+	else:
+		_change_state(STATES.IDLE)
 
 
 func _input(event):
-	if event.is_action_pressed('click') and $Outline.visible == true:
-		target = get_global_mouse_position()
+	if event.is_action_pressed('touch') and $Outline.visible == true:
+		target_position = get_global_mouse_position()
+		_change_state(STATES.FOLLOW)
 
-#func _physics_process(delta):
-#	velocity = (target - position).normalized() * speed
-#	$Rotating.rotation = velocity.angle()
-#	if (target - position).length() > 10:
-#		velocity = move_and_slide(velocity)
+func _change_state(new_state):
+	if new_state == STATES.FOLLOW:
+		path = get_parent().get_node('TileMap').find_path(global_position, target_position)
+		if not path or len(path) == 1:
+			_change_state(STATES.IDLE)
+			return
+		# The index 0 is the starting cell
+		# we don't want the character to move back to it in this example
+		target_point_world = path[1]
+	_state = new_state
 
-#func _physics_process(delta):
-#	line.global_position = Vector2.ZERO
-#	if levelNavigation and target:
-#		generate_path()
-#		navigate()
-#	move()
 
-func _physics_process(delta):
-	generate_path()
-	if path:
-		var vel : Vector2
+func _process(delta):
+	if not _state == STATES.FOLLOW:
+		return
+	var arrived_to_next_point = move_to(target_point_world)
+	if arrived_to_next_point:
+		path.remove(0)
+		if len(path) == 0:
+			_change_state(STATES.IDLE)
+			return
+		target_point_world = path[0]
 
-		if index < path.size()-1:
-			vel = path[index+1] - path[index]
-			if close_to_target(global_position, path[index+1]):
-				index += 1
-		else:
-			vel = Vector2.ZERO
-		vel = move_and_slide(vel.normalized()*speed)
 
-func close_to_target(a, b):
-	var res := false
-	var mar := 5
-	if (abs(abs(a.x) - abs(b.x)) < mar) and (abs(abs(a.y) - abs(b.y)) < mar):
-		res = true
-	return res
-	
-func move():
-	velocity = move_and_slide(velocity)
+func move_to(world_position):
+	var ARRIVE_DISTANCE = 10.0
 
-func navigate():
-	if path.size() > 0:
-		velocity = global_position.direction_to(path[1]) * speed
-				
-		if global_position == path[0]:
-			pass
-#			print(typeof(path))
-#			path.pop_front()
+	var desired_velocity = (world_position - position).normalized() * speed
+	var steering = desired_velocity - velocity
+	velocity += steering
+#	position += velocity * get_process_delta_time()
+	move_and_slide(velocity)
+	rotation = velocity.angle()
+	return position.distance_to(world_position) < ARRIVE_DISTANCE
 
-func generate_path():
-	if levelNavigation != null:
-		path = levelNavigation.get_simple_path(global_position, target, false)
-		line.points = path
 
 func _on_timeout():
 	var units_in_range = $Rotating/UnitDetection.get_overlapping_bodies()
 	for unit in units_in_range:
 		if unit.is_in_group('unit') and not unit.is_in_group(player) and (last_position - position).length() <= 10:
-			shoot()	
+			shoot()
 	last_position = position
 	
 func shoot():
@@ -161,8 +150,6 @@ func combine_army(army):
 				position = new_position
 				army.queue_free()
 				update_counter()
-
-
 
 func update_counter():
 	var count = 0

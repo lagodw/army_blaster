@@ -1,16 +1,16 @@
 extends Camera2D
 
 const MAX_ZOOM_LEVEL = .5
-const MIN_ZOOM_LEVEL = 4
-const ZOOM_INCREMENT = 0.05
+const MIN_ZOOM_LEVEL = 8
+const ZOOM_INCREMENT = 0.2
 
-var scroll_margin = 100
+var scroll_margin = 20
 var scroll_amount = 50
 
-var LEFT_LIMIT = -80000
-var TOP_LIMIT = -58000
-var RIGHT_LIMIT = 160000
-var BOTTOM_LIMIT = 110000
+var LEFT_LIMIT = -100
+var TOP_LIMIT = -100
+var RIGHT_LIMIT = 4100
+var BOTTOM_LIMIT = 2400
 
 signal moved()
 signal zoomed()
@@ -23,15 +23,22 @@ var size
 func _physics_process(delta):
 	var mouse_pos = get_viewport().get_mouse_position()
 	size = get_viewport_rect().size
-	
-	if mouse_pos.x >= size.x - scroll_margin:
+	var width = size.x
+	var height = size.y
+			
+	if mouse_pos.x >= size.x - scroll_margin and \
+	position.x <= RIGHT_LIMIT - (width * _current_zoom_level) / 2:
 		position.x += scroll_amount
-	elif mouse_pos.x <= scroll_margin:
+	elif mouse_pos.x <= scroll_margin and \
+	position.x >= LEFT_LIMIT + (width * _current_zoom_level) / 2:
 		position.x -= scroll_amount
-	if mouse_pos.y >= size.y - scroll_margin:
+	if mouse_pos.y >= size.y - scroll_margin and \
+	position.y <= BOTTOM_LIMIT - (height * _current_zoom_level) / 2:
 		position.y += scroll_amount
-	elif mouse_pos.y <= scroll_margin:
+	elif mouse_pos.y <= scroll_margin and \
+	position.y >= TOP_LIMIT + (height * _current_zoom_level) / 2:
 		position.y -= scroll_amount
+		
 
 
 func _input(event):

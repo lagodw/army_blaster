@@ -54,4 +54,4 @@ func _unhandled_input(event):
 func _draw():
 	if dragging:
 		draw_rect(Rect2(drag_start, get_global_mouse_position() - drag_start),
-				Color(1, 1, 1, .2), true)
+				Color(1, 1, 1, 1), true)

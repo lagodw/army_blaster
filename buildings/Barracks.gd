@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-var player = "P0"
+export var player = "P0"
 var max_status = 100
 var capture_status
 
@@ -62,5 +62,5 @@ func spawn_marine():
 		var unit = Marine.instance()
 		unit.global_position = $SpawnPoint.global_position
 		unit.player = player
-		unit.target = $Rally.global_position
+		unit.target_position = $Rally.global_position
 		get_parent().add_child(unit)
