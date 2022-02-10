@@ -1,6 +1,7 @@
 extends KinematicBody2D
+export (PackedScene) var Marine = preload("res://units/Marine.tscn")
 
-export (int) var speed = 500
+export (int) var speed = 250
 export (PackedScene) var Bullet = preload("res://units/Bullet.tscn")
 
 enum STATES { IDLE, FOLLOW }
@@ -16,39 +17,41 @@ var last_position = Vector2()
 
 export var player = "P1"
 
-var army_units = {'marine': 1}
+var army_units = {'Marine': 0}
 var hitpoints = 1
 
 
 func _ready():
 	$Timer.wait_time = Global.timer
 	
-	last_position = self.position
-	
-	$Health.max_value = 100
-	update_hp()
-	
-	$Timer.connect('timeout', self, '_on_timeout')
 	$CombineArea.connect('body_entered', self, 'combine_army')
+	$Timer.connect('timeout', self, 'check_for_armies')
 	
-	self.add_to_group(player)
-	if player == "P1":
-		get_node("Rotating/Flag").modulate = Color.blue
-		get_node("Outline").modulate = Color.blue
-		get_node("NumOutline").modulate = Color.blue
-		get_node("UnitCount").add_color_override("font_color", Color.blue)
-	elif player == "P2":
-		get_node("Rotating/Flag").modulate = Color.red
-		get_node("Outline").modulate = Color.red
-		get_node("NumOutline").modulate = Color.red
-		get_node("UnitCount").add_color_override("font_color", Color.red)
-	update_counter()
-
 	if target_position.length() >0:
 		_change_state(STATES.FOLLOW)
 	else:
 		_change_state(STATES.IDLE)
-
+		
+	for unit in $Units.get_children():
+		unit.player = player
+		if "Marine" in unit.name:
+			army_units['Marine'] += 1
+	
+	self.add_to_group(player)
+	if player == "P1":
+		get_node("Flag").modulate = Color.blue
+		get_node("Outline").modulate = Color.blue
+		get_node("NumOutline").modulate = Color.blue
+		get_node("UnitCount").add_color_override("font_color", Color.blue)
+	elif player == "P2":
+		get_node("Flag").modulate = Color.red
+		get_node("Outline").modulate = Color.red
+		get_node("NumOutline").modulate = Color.red
+		get_node("UnitCount").add_color_override("font_color", Color.red)
+	update_counter()
+	
+	$Health.max_value = 100
+	update_hp()
 
 func _input(event):
 	if event.is_action_pressed('touch') and is_in_group('selected'):
@@ -72,7 +75,8 @@ func _change_state(new_state):
 
 func _process(delta):
 	if rotating:
-		$Rotating.look_at(get_global_mouse_position())
+		for unit in $Units.get_children():
+			unit.look_at(get_global_mouse_position())
 		
 	if not _state == STATES.FOLLOW:
 		return
@@ -91,29 +95,11 @@ func move_to(world_position):
 	var desired_velocity = (world_position - position).normalized() * speed
 	var steering = desired_velocity - velocity
 	velocity += steering
-#	position += velocity * get_process_delta_time()
 	move_and_slide(velocity)
-	rotation = velocity.angle()
+	for unit in $Units.get_children():
+		unit.look_at(to_global(velocity))
 	return position.distance_to(world_position) < ARRIVE_DISTANCE
 
-
-func _on_timeout():
-	var units_in_range = $Rotating/UnitDetection.get_overlapping_bodies()
-	for unit in units_in_range:
-		if unit.is_in_group('unit') and not unit.is_in_group(player) and (last_position - position).length() <= 10:
-			shoot()
-	last_position = position
-	
-func shoot():
-	var damage = 0
-	for unit in army_units:
-		damage += Global.unit_stats[unit]['damage'] * army_units[unit]
-	var b = Bullet.instance()
-	b.player = player
-	b.damage = damage
-	get_parent().add_child(b)
-	b.transform = $Rotating/Muzzle.global_transform
-	
 func select():
 	$Outline.visible = true
 	remove_from_group('new_selected')
@@ -123,44 +109,49 @@ func deselect():
 	$Outline.visible = false
 	remove_from_group('selected')
 
-func combine_army(army):
-	if army.is_in_group('unit'):
-		if army.player == player and army != self:
-			if self.get_instance_id() > army.get_instance_id():
-				var new_units = {}
-				for unit in self.army_units:
-					if unit in new_units:
-						new_units[unit] += self.army_units[unit]
-					else:
-						new_units[unit] = self.army_units[unit]
-				for unit in army.army_units:
-					if unit in new_units:
-						new_units[unit] += army.army_units[unit]
-					else:
-						new_units[unit] = army.army_units[unit]
-						
-				if army.is_in_group('selected'):
-					select()
-				
-				army_units = new_units
-				var new_position = (position + army.position) / 2
-				position = new_position
-				army.queue_free()
-				update_counter()
+func combine_army(area):
+	if area.is_in_group('army') and area.player == player:
+		if self.get_instance_id() > area.get_instance_id():
+			var offset = global_position - area.global_position
+			for unit in area.get_node('Units').get_children():
+				army_units['Marine'] += 1
+				unit.name = "Marine" + str(army_units['Marine'])
+				area.get_node('Units').remove_child(unit)
+				$Units.add_child(unit)
+				unit.position -= offset
+			area.queue_free()
+			
+			if area.is_in_group('selected') and not is_in_group('selected'):
+				select()
+			update_counter()
 
+func check_for_armies():
+	var units_in_range = $UnitDetection.get_overlapping_bodies()
+	for unit in units_in_range:
+		if unit.is_in_group('army') and not unit.is_in_group(player) and (last_position - position).length() <= 10:
+			order_shoot()
+	last_position = position
+	
+func order_shoot():
+	for unit in $Units.get_children():
+		unit.shoot()
+		
 func update_counter():
 	var count = 0
 	for unit in army_units:
 		count += army_units[unit]
 	$UnitCount.text = str(count)
-
+	var circle_scale = .2 + count * .025
+	$Outline.scale = Vector2(circle_scale, circle_scale)
+	
 func take_damage(dmg):
 	var new_hp = hitpoints - dmg
 	while new_hp <= 0.000001:
-		if army_units['marine'] == 1:
+		if army_units['Marine'] == 1:
 			die()
 		else:
-			army_units['marine'] -= 1
+			get_node("Units/Marine" + str(army_units['Marine'])).queue_free()
+			army_units['Marine'] -= 1
 			update_counter()
 		new_hp += 1
 	hitpoints = new_hp

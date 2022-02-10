@@ -4,7 +4,7 @@ export var player = "P0"
 var max_status = 100
 var capture_status
 
-export (PackedScene) var Marine = preload("res://units/ArmyDude.tscn")
+export (PackedScene) var Marine = preload("res://units/Army.tscn")
 
 func _ready():
 
@@ -22,8 +22,8 @@ func _on_timeout():
 	var units = $CaptureZone.get_overlapping_bodies()
 	var players = {'P0': 0, 'P1': 0, 'P2': 0}
 	for unit in units:
-		if unit.is_in_group('unit'):
-			players[unit.player] += unit.army_units['marine']
+		if unit.is_in_group('army'):
+			players[unit.player] += unit.army_units['Marine']
 	
 	var max_player
 	var max_amount = 0
@@ -50,13 +50,24 @@ func update_owner():
 	if player == "P1":
 		get_node("icon").modulate = Color.blue
 		$Progress.tint_progress = Color.blue
+		$Outline.modulate = Color.blue
+		$RallyFlag.modulate = Color.blue
 	elif player == "P2":
 		get_node("icon").modulate = Color.red
 		$Progress.tint_progress = Color.red
+		$Outline.modulate = Color.red
+		$RallyFlag.modulate = Color.red
 	else:
+		deselect()
 		get_node('icon').modulate = Color.gray
 		$Progress.tint_progress = Color.gray
-
+	
+func _input(event):
+	if event.is_action_pressed('touch') and is_in_group('selected'):
+		var target_position = get_global_mouse_position()
+		$Rally.global_position = target_position
+		$RallyFlag.global_position = target_position
+		
 func spawn_marine():
 	if player != 'P0':
 		var unit = Marine.instance()
@@ -64,3 +75,15 @@ func spawn_marine():
 		unit.player = player
 		unit.target_position = $Rally.global_position
 		get_parent().add_child(unit)
+
+func select():
+	if player != "P0":
+		$Outline.visible = true
+		$RallyFlag.visible = true
+		remove_from_group('new_selected')
+		add_to_group('selected')
+	
+func deselect():
+	$Outline.visible = false
+	$RallyFlag.visible = false
+	remove_from_group('selected')

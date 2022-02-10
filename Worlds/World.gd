@@ -22,22 +22,25 @@ func get_units_in_box(event):
 		query.set_shape(select_rect)
 		query.transform = Transform2D(0, (drag_end + drag_start) / 2)
 		var new_selected = space.intersect_shape(query)
-
-		var tmp = []
+		selected = get_tree().get_nodes_in_group('selected')
+		
+		var has_unit = false
 		for unit in new_selected:
 #			if unit.collider.is_in_group('unit') and unit.collider.player == player:
-			if unit.collider.is_in_group('unit'):
-				tmp.append(unit)
-
+			if unit.collider.is_in_group('army'):
+				unit.collider.add_to_group('new_selected')
+				has_unit = true
+		if not has_unit:
+			for unit in new_selected:
+				if unit.collider.is_in_group('building'):
+					unit.collider.add_to_group('new_selected')
+				
 		if Input.is_action_pressed('shift'):
-			selected += tmp
+			pass
 		else:
-			for item in selected:
-				item.collider.deselect()
-			selected = tmp
-			
-		for item in selected:
-			item.collider.select()
+			get_tree().call_group('selected', 'deselect')
+		
+		get_tree().call_group('new_selected', 'select')
 			
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:

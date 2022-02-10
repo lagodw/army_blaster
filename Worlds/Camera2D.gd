@@ -5,7 +5,7 @@ const MIN_ZOOM_LEVEL = 8
 const ZOOM_INCREMENT = 0.2
 
 var scroll_margin = 20
-var scroll_amount = 50
+var scroll_amount = 25
 
 var LEFT_LIMIT = -100
 var TOP_LIMIT = -100

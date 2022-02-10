@@ -63,7 +63,9 @@ polygon = PoolVector2Array( -0.994446, -2.97296, 448, -512, 1336, 0, 448, 512 )
 wait_time = 0.5
 autostart = true
 
-[node name="CombineArea" type="Area2D" parent="."]
+[node name="CombineArea" type="Area2D" parent="." groups=[
+"army",
+]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CombineArea"]
 shape = SubResource( 2 )

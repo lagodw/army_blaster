@@ -1,6 +1,5 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://units/ArmyDude.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Worlds/World.gd" type="Script" id=2]
 [ext_resource path="res://buildings/Barracks.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Worlds/Camera2D.gd" type="Script" id=4]
@@ -8,6 +7,7 @@
 [ext_resource path="res://Worlds/TileMap.gd" type="Script" id=6]
 [ext_resource path="res://Worlds/tilemap.png" type="Texture" id=7]
 [ext_resource path="res://Worlds/wall.jpg" type="Texture" id=8]
+[ext_resource path="res://units/Army.tscn" type="PackedScene" id=9]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tilemap.png 0"
@@ -53,20 +53,6 @@ current = true
 zoom = Vector2( 4, 4 )
 script = ExtResource( 4 )
 
-[node name="ArmyDude" parent="." instance=ExtResource( 1 )]
-position = Vector2( 373.713, 562.608 )
-
-[node name="ArmyDude2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 662.494, 334.088 )
-
-[node name="ArmyDude3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 3326.84, 2096.08 )
-player = "P2"
-
-[node name="ArmyDude4" parent="." instance=ExtResource( 1 )]
-position = Vector2( 3727.29, 1706.31 )
-player = "P2"
-
 [node name="Barracks" parent="." instance=ExtResource( 3 )]
 position = Vector2( 346.025, 243.901 )
 player = "P1"
@@ -79,10 +65,21 @@ player = "P2"
 position = Vector2( 358.15, 2080.06 )
 
 [node name="Barracks4" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1249.82, 1460.69 )
+position = Vector2( 1132.78, 1581.91 )
+collision_mask = 2
 
 [node name="Barracks5" parent="." instance=ExtResource( 3 )]
 position = Vector2( 3647.2, 376.803 )
 
 [node name="Barracks6" parent="." instance=ExtResource( 3 )]
 position = Vector2( 1847.83, 355.445 )
+
+[node name="Army" parent="." instance=ExtResource( 9 )]
+position = Vector2( 805.184, 1650.38 )
+
+[node name="Army2" parent="." instance=ExtResource( 9 )]
+position = Vector2( 1415.08, 929.187 )
+player = "P2"
+
+[node name="Army3" parent="." instance=ExtResource( 9 )]
+position = Vector2( 860.354, 339.718 )
