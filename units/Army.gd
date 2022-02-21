@@ -56,6 +56,9 @@ func _ready():
 func _input(event):
 	if event.is_action_pressed('touch') and is_in_group('selected'):
 		target_position = get_global_mouse_position()
+		$UnitDetection.look_at(get_global_mouse_position())
+		for unit in $Units.get_children():
+			unit.rotate_to(get_global_mouse_position())
 		_change_state(STATES.FOLLOW)
 	elif event.is_action_pressed('rotate') and is_in_group('selected'):
 		rotating = true
@@ -64,6 +67,8 @@ func _input(event):
 
 func _change_state(new_state):
 	if new_state == STATES.FOLLOW:
+#		for unit in $Units.get_children():
+#			unit.move_animation()
 		path = get_parent().get_node('TileMap').find_path(global_position, target_position)
 		if not path or len(path) == 1:
 			_change_state(STATES.IDLE)
@@ -71,12 +76,16 @@ func _change_state(new_state):
 		# The index 0 is the starting cell
 		# we don't want the character to move back to it in this example
 		target_point_world = path[1]
+	elif new_state == STATES.IDLE:
+		for unit in $Units.get_children():
+			unit.stop_animation()
 	_state = new_state
 
 func _process(delta):
 	if rotating:
 		for unit in $Units.get_children():
-			unit.look_at(get_global_mouse_position())
+			unit.rotate_to(get_global_mouse_position())
+		$UnitDetection.look_at(get_global_mouse_position())
 		
 	if not _state == STATES.FOLLOW:
 		return
@@ -97,7 +106,7 @@ func move_to(world_position):
 	velocity += steering
 	move_and_slide(velocity)
 	for unit in $Units.get_children():
-		unit.look_at(to_global(velocity))
+		unit.move_animation(rad2deg(velocity.angle_to_point(Vector2(0, 0))))
 	return position.distance_to(world_position) < ARRIVE_DISTANCE
 
 func select():
@@ -111,7 +120,7 @@ func deselect():
 
 func combine_army(area):
 	if area.is_in_group('army') and area.player == player:
-		if self.get_instance_id() > area.get_instance_id():
+		if self.get_instance_id() < area.get_instance_id():
 			var offset = global_position - area.global_position
 			for unit in area.get_node('Units').get_children():
 				army_units['Marine'] += 1
@@ -141,7 +150,7 @@ func update_counter():
 	for unit in army_units:
 		count += army_units[unit]
 	$UnitCount.text = str(count)
-	var circle_scale = .2 + count * .025
+	var circle_scale = min(.2 + count * .025, .4)
 	$Outline.scale = Vector2(circle_scale, circle_scale)
 	
 func take_damage(dmg):

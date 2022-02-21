@@ -58,15 +58,13 @@ position = Vector2( 346.025, 243.901 )
 player = "P1"
 
 [node name="Barracks2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 3689.92, 2005.31 )
-player = "P2"
+position = Vector2( 3465.7, 1900.61 )
 
 [node name="Barracks3" parent="." instance=ExtResource( 3 )]
 position = Vector2( 358.15, 2080.06 )
 
 [node name="Barracks4" parent="." instance=ExtResource( 3 )]
 position = Vector2( 1132.78, 1581.91 )
-collision_mask = 2
 
 [node name="Barracks5" parent="." instance=ExtResource( 3 )]
 position = Vector2( 3647.2, 376.803 )
