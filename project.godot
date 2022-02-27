@@ -9,12 +9,24 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "Army",
+"language": "GDScript",
+"path": "res://units/Army.gd"
+}, {
+"base": "Area2D",
+"class": "Bullet",
+"language": "GDScript",
+"path": "res://units/Bullet.gd"
+}, {
 "base": "TileMap",
 "class": "GridManager",
 "language": "GDScript",
 "path": "res://Worlds/WallTilemap.gd"
 } ]
 _global_script_class_icons={
+"Army": "",
+"Bullet": "",
 "GridManager": ""
 }
 

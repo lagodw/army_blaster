@@ -1,4 +1,6 @@
 extends KinematicBody2D
+class_name Army
+
 export (PackedScene) var Marine = preload("res://units/Marine.tscn")
 
 export (int) var speed = 250
@@ -138,7 +140,10 @@ func check_for_armies():
 	var units_in_range = $UnitDetection.get_overlapping_bodies()
 	for unit in units_in_range:
 		if unit.is_in_group('army') and not unit.is_in_group(player) and (last_position - position).length() <= 10:
-			order_shoot()
+			var space_state = get_world_2d().direct_space_state
+			var sight_check = space_state.intersect_ray(position, unit.position, [self], 4)
+			if len(sight_check) == 0:
+				order_shoot()
 	last_position = position
 	
 func order_shoot():
