@@ -3,7 +3,7 @@ extends TileMap
 # You can only create an AStar node from code, not from the Scene tab
 onready var astar_node = AStar.new()
 # The Tilemap node doesn't have clear bounds so we're defining the map's limits here
-export(Vector2) var map_size = Vector2(5000, 5000)
+export(Vector2) var map_size = Vector2(10000, 5000)
 
 # The path start and end variables use setter methods
 # You can find them at the bottom of the script
@@ -17,18 +17,38 @@ const DRAW_COLOR = Color('#fff')
 
 # get_used_cells_by_id is a method from the TileMap node
 # here the id 0 corresponds to the grey tile, the obstacles
-onready var obstacles = get_used_cells_by_id(1)
+var obstacles = []
+onready var obstacle_sizes = {'tree': Vector2(1,2), 'building': Vector2(4,6),
+'car': Vector2(2, 1), 'bench': Vector2(2, 1), 'shrub': Vector2(2, 1), 'light': Vector2(1, 2)}
 onready var _half_cell_size = cell_size / 2
 onready var all_cells = get_used_cells()
 
+
+
 func _ready():
+	get_obstacle_points(obstacle_sizes)
 	var walkable_cells_list = astar_add_walkable_cells(obstacles)
 #	astar_connect_walkable_cells(walkable_cells_list)
 	astar_connect_walkable_cells_diagonal(walkable_cells_list)
 
+func get_obstacle_points(obstacles = {}):
+	for type in obstacle_sizes.keys():
+		var tile_id = tile_set.find_tile_by_name(type)
+		var tiles = get_used_cells_by_id(tile_id)
+		var obs_size = obstacle_sizes[type]
+		for obstacle in tiles:
+			add_obs_point(obstacle)
+			for vertical in range(obs_size.y):
+				for horizontal in range(obs_size.x):
+					add_obs_point(obstacle + Vector2(horizontal, vertical))
+
+func add_obs_point(obstacle):
+	if not obstacles.has(obstacle):
+		obstacles.append(obstacle)
+
 # Loops through all cells within the map's bounds and
 # adds all points to the astar_node, except the obstacles
-func astar_add_walkable_cells(obstacles = []):
+func astar_add_walkable_cells(obstacle_points = {}):
 	var points_array = []
 #	for y in range(map_size.y):
 #		for x in range(map_size.x):
@@ -36,7 +56,7 @@ func astar_add_walkable_cells(obstacles = []):
 		var x = cell.x
 		var y = cell.y
 		var point = Vector2(x, y)
-		if point in obstacles:
+		if point in obstacle_points:
 			continue
 
 		points_array.append(point)
@@ -138,19 +158,19 @@ func clear_previous_path_drawing():
 	var point_end = _point_path[len(_point_path) - 1]
 
 
-func _draw():
-	if not _point_path:
-		return
-	var point_start = _point_path[0]
-	var point_end = _point_path[len(_point_path) - 1]
-
-
-	var last_point = map_to_world(Vector2(point_start.x, point_start.y)) + _half_cell_size
-	for index in range(1, len(_point_path)):
-		var current_point = map_to_world(Vector2(_point_path[index].x, _point_path[index].y)) + _half_cell_size
-		draw_line(last_point, current_point, DRAW_COLOR, BASE_LINE_WIDTH, true)
-		draw_circle(current_point, BASE_LINE_WIDTH * 2.0, DRAW_COLOR)
-		last_point = current_point
+#func _draw():
+#	if not _point_path:
+#		return
+#	var point_start = _point_path[0]
+#	var point_end = _point_path[len(_point_path) - 1]
+#
+#
+#	var last_point = map_to_world(Vector2(point_start.x, point_start.y)) + _half_cell_size
+#	for index in range(1, len(_point_path)):
+#		var current_point = map_to_world(Vector2(_point_path[index].x, _point_path[index].y)) + _half_cell_size
+#		draw_line(last_point, current_point, DRAW_COLOR, BASE_LINE_WIDTH, true)
+#		draw_circle(current_point, BASE_LINE_WIDTH * 2.0, DRAW_COLOR)
+#		last_point = current_point
 
 
 # Setters for the start and end path values.

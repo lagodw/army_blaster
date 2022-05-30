@@ -7,10 +7,10 @@ const ZOOM_INCREMENT = 0.2
 var scroll_margin = 20
 var scroll_amount = 25
 
-var LEFT_LIMIT = -100
-var TOP_LIMIT = -100
-var RIGHT_LIMIT = 4100
-var BOTTOM_LIMIT = 2400
+var LEFT_LIMIT = -1000
+var TOP_LIMIT = -1000
+var RIGHT_LIMIT = 41000
+var BOTTOM_LIMIT = 24000
 
 signal moved()
 signal zoomed()
