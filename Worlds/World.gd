@@ -59,4 +59,8 @@ func _draw():
 		draw_rect(Rect2(drag_start, get_global_mouse_position() - drag_start),
 				Color(1, 1, 1, 1), true)
 
-
+func update_positions(positions):
+	for unit in positions.keys():
+		for army in get_tree().get_nodes_in_group('army'):
+			if unit == army.unit_id:
+				army.position = positions[unit]['P']

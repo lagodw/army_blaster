@@ -9,3 +9,6 @@ var timer = .25
 func _ready():
 	pass
 
+var player
+var waiting_for_server = true
+var game_mode = 'single'

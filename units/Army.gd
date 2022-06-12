@@ -22,6 +22,8 @@ export var player = "P1"
 var army_units = {'Marine': 0}
 var hitpoints = 1
 
+export var unit_id = 1
+
 
 func _ready():
 	$Timer.wait_time = Global.timer
@@ -84,6 +86,9 @@ func _change_state(new_state):
 	_state = new_state
 
 func _process(delta):
+	Server.SendUnitState({unit_id:{'T':OS.get_system_time_msecs(),
+	  "P":get_global_position()}})
+	
 	if rotating:
 		for unit in $Units.get_children():
 			unit.rotate_to(get_global_mouse_position())
