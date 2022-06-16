@@ -69,12 +69,9 @@ func _input(event):
 		$RallyFlag.global_position = target_position
 		
 func spawn_marine():
-	if player != 'P0':
-		var unit = Marine.instance()
-		unit.global_position = $SpawnPoint.global_position
-		unit.player = player
-		unit.target_position = $Rally.global_position
-		get_parent().add_child(unit)
+	if player == Global.player:
+		Global.spawn_army(player, $SpawnPoint.global_position
+		  , $Rally.global_position, null)
 
 func select():
 	if player != "P0":

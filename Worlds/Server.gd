@@ -28,7 +28,7 @@ func StartServer():
 	network.connect("peer_connected", self, "_Peer_Connected")
 	network.connect("peer_disconnected", self, "_Peer_Disconnected")
 func _Peer_Connected(player_id):
-	var new_player = 'P' + str(len(players) + 1)
+	var new_player = 'P' + str(len(players) + 2)
 	players[player_id] = new_player
 	print('User ' + str(player_id) + " Connected as " + new_player)
 	
@@ -46,10 +46,11 @@ remote func SendCounter(player):
 	Global.unit_counter += 1
 
 func SendStart():
+	Global.unit_counter = 1
+	Global.player = "P1"
 	for player in players:
 		ids[players[player]] = player
 		rpc_id(player, 'StartGame', players[player])
-	Global.player = "P1"
 	get_tree().change_scene("res://Worlds/Combat.tscn")
 	
 remote func ReceiveUnitState(unit_state):
@@ -57,15 +58,13 @@ remote func ReceiveUnitState(unit_state):
 	if unit_state_collection.has(unit_id):
 		if unit_state_collection[unit_id]["T"] < unit_state[unit_id]["T"]:
 			unit_state_collection[unit_id] = unit_state[unit_id]
-#	else:
-#		unit_state_collection[unit_id] = unit_state[unit_id]
 	get_node('../Map').update_positions(unit_state_collection)
 	
-remote func ServerSpawnArmy(receive_player, start, target, id):
-	print('received request to spawn from ' + receive_player)
-	for send_player in players:
-		if players[send_player] != receive_player:
-			rpc_id(send_player, 'ReceiveSpawnArmy', receive_player, start, target, id)
+#remote func ServerSpawnArmy(receive_player, start, target, id):
+#	print('received request to spawn from ' + receive_player)
+#	for send_player in players:
+#		if players[send_player] != receive_player:
+#			rpc_id(send_player, 'ReceiveSpawnArmy', receive_player, start, target, id)
 
 ###########################################
 ################## PLAYER #################
@@ -82,7 +81,11 @@ func _OnConnectionSucceeded():
 	print('Successfully connected')
 	
 func RequestCounter(player):
-	rpc_id(1, 'SendCounter', player)
+	if Global.player == "P1":
+		ReceiveCounter(Global.unit_counter)
+		Global.unit_counter += 1
+	else:
+		rpc_id(1, 'SendCounter', player)
 remote func ReceiveCounter(count):
 	print('received count ' + str(count))
 	Global.unit_counter = count
@@ -98,7 +101,7 @@ func SendUnitState(unit_state):
 	rpc_unreliable_id(0, "ReceiveUnitState", unit_state)
 
 func SendSpawnArmy(player, start, target, id):
-	rpc_id(1, 'ServerSpawnArmy', player, start, target, id)
+	rpc_id(0, 'ReceiveSpawnArmy', player, start, target, id)
 
 remote func ReceiveSpawnArmy(player, start, target, id):
 	Global.spawn_army(player, start, target, id)

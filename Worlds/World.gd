@@ -35,8 +35,7 @@ func get_units_in_box(event):
 		
 		var has_unit = false
 		for unit in new_selected:
-#			if unit.collider.is_in_group('unit') and unit.collider.player == player:
-			if unit.collider.is_in_group('army'):
+			if unit.collider.is_in_group('army') and unit.collider.player == player:
 				unit.collider.add_to_group('new_selected')
 				has_unit = true
 		if not has_unit:
