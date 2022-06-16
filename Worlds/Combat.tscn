@@ -1,8 +1,7 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Worlds/road_tileset.png" type="Texture" id=1]
 [ext_resource path="res://themes/NEW DONK CITY tileset.png" type="Texture" id=2]
-[ext_resource path="res://units/Army.tscn" type="PackedScene" id=3]
 [ext_resource path="res://buildings/Barracks.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Worlds/TileMap.gd" type="Script" id=5]
 [ext_resource path="res://Worlds/World.gd" type="Script" id=6]
@@ -196,10 +195,10 @@ position = Vector2( 5980.18, 4499.06 )
 [node name="Barracks5" parent="." instance=ExtResource( 4 )]
 position = Vector2( 3745.09, 2309.27 )
 
-[node name="Army" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1790.37, 755.923 )
+[node name="StartingPos" type="Node2D" parent="."]
 
-[node name="Army2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 4327.97, 1195.79 )
-player = "P2"
-unit_id = 2
+[node name="P1" type="Position2D" parent="StartingPos"]
+position = Vector2( 1388.27, 640.013 )
+
+[node name="P2" type="Position2D" parent="StartingPos"]
+position = Vector2( 2781.85, 1183.94 )

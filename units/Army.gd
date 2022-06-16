@@ -13,6 +13,7 @@ var path = []
 var target_point_world = Vector2()
 var target_position = Vector2()
 var rotating = false
+var rotate_target
 
 var velocity = Vector2()
 var last_position = Vector2()
@@ -22,14 +23,24 @@ export var player = "P1"
 var army_units = {'Marine': 0}
 var hitpoints = 1
 
-export var unit_id = 1
+var unit_id
 
 
 func _ready():
+	set_process(true)
+	
 	$Timer.wait_time = Global.timer
 	
 	$CombineArea.connect('body_entered', self, 'combine_army')
 	$Timer.connect('timeout', self, 'check_for_armies')
+	
+#	player = Global.player
+#
+#	Server.RequestCounter(player)
+#	while Global.waiting_for_server:
+#		yield(get_tree().create_timer(.01), "timeout")
+#	Global.waiting_for_server = true
+#	unit_id = Global.unit_counter
 	
 	if target_position.length() >0:
 		_change_state(STATES.FOLLOW)
@@ -86,14 +97,20 @@ func _change_state(new_state):
 	_state = new_state
 
 func _process(delta):
-	Server.SendUnitState({unit_id:{'T':OS.get_system_time_msecs(),
-	  "P":get_global_position()}})
-	
+	if player != Global.player:
+		return
+		
 	if rotating:
 		for unit in $Units.get_children():
 			unit.rotate_to(get_global_mouse_position())
 		$UnitDetection.look_at(get_global_mouse_position())
-		
+		rotate_target = get_global_mouse_position()
+	else:
+		rotate_target = target_point_world
+
+	Server.SendUnitState({unit_id:{'T':OS.get_system_time_msecs(),
+	  "P":get_global_position(), "R":rotate_target}})
+
 	if not _state == STATES.FOLLOW:
 		return
 	var arrived_to_next_point = move_to(target_point_world)
@@ -103,7 +120,7 @@ func _process(delta):
 			_change_state(STATES.IDLE)
 			return
 		target_point_world = path[0]
-		
+
 
 func move_to(world_position):
 	var ARRIVE_DISTANCE = 10.0

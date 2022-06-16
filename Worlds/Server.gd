@@ -33,7 +33,7 @@ func _Peer_Connected(player_id):
 	print('User ' + str(player_id) + " Connected as " + new_player)
 	
 	rpc_id(player_id, 'ReceivePlayerNum', new_player)
-	if new_player == "P1":
+	if new_player == "P2":
 		SendStart()
 func _Peer_Disconnected(player_id):
 	players.erase(player_id)
@@ -42,11 +42,12 @@ func _Peer_Disconnected(player_id):
 
 
 remote func SendCounter(player):
-	rpc_id(0, "ReceiveCounter", Global.unit_counter)
-	Global.unit_counter[player] += 1
+	rpc_id(ids[player], "ReceiveCounter", Global.unit_counter)
+	Global.unit_counter += 1
 
 func SendStart():
 	for player in players:
+		ids[players[player]] = player
 		rpc_id(player, 'StartGame', players[player])
 	Global.player = "P1"
 	get_tree().change_scene("res://Worlds/Combat.tscn")
@@ -56,9 +57,15 @@ remote func ReceiveUnitState(unit_state):
 	if unit_state_collection.has(unit_id):
 		if unit_state_collection[unit_id]["T"] < unit_state[unit_id]["T"]:
 			unit_state_collection[unit_id] = unit_state[unit_id]
-	else:
-		unit_state_collection[unit_id] = unit_state[unit_id]
+#	else:
+#		unit_state_collection[unit_id] = unit_state[unit_id]
 	get_node('../Map').update_positions(unit_state_collection)
+	
+remote func ServerSpawnArmy(receive_player, start, target, id):
+	print('received request to spawn from ' + receive_player)
+	for send_player in players:
+		if players[send_player] != receive_player:
+			rpc_id(send_player, 'ReceiveSpawnArmy', receive_player, start, target, id)
 
 ###########################################
 ################## PLAYER #################
@@ -74,8 +81,8 @@ func _OnConnectionFailed():
 func _OnConnectionSucceeded():
 	print('Successfully connected')
 	
-func RequestCounter():
-	rpc_id(1, 'SendCounter')
+func RequestCounter(player):
+	rpc_id(1, 'SendCounter', player)
 remote func ReceiveCounter(count):
 	print('received count ' + str(count))
 	Global.unit_counter = count
@@ -88,9 +95,13 @@ remote func StartGame(player):
 	get_tree().change_scene("res://Worlds/Combat.tscn")
 
 func SendUnitState(unit_state):
-	rpc_unreliable_id(1, "ReceiveUnitState", unit_state)
+	rpc_unreliable_id(0, "ReceiveUnitState", unit_state)
 
+func SendSpawnArmy(player, start, target, id):
+	rpc_id(1, 'ServerSpawnArmy', player, start, target, id)
 
+remote func ReceiveSpawnArmy(player, start, target, id):
+	Global.spawn_army(player, start, target, id)
 
 ###########################################
 ################## BOTH ###################

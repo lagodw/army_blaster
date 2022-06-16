@@ -8,6 +8,15 @@ var select_rect = RectangleShape2D.new()  # Collision shape for drag box.
 
 var player = "P1"
 
+
+func _ready():
+	player = Global.player
+	for start in $StartingPos.get_children():
+		if start.name == player:
+			print(start.name)
+			Global.spawn_army(player, start.position, start.position)
+
+
 func get_units_in_box(event):
 	if event.pressed:
 		dragging = true
@@ -62,5 +71,10 @@ func _draw():
 func update_positions(positions):
 	for unit in positions.keys():
 		for army in get_tree().get_nodes_in_group('army'):
-			if unit == army.unit_id:
+			if unit == army.unit_id and army.player != Global.player:
 				army.position = positions[unit]['P']
+				army.rotate_target
+#				for marine in army.get_node('Units').get_children():
+#					marine.rotate_to(positions[unit]['R'])
+##					marine.rotation = positions[unit]['R']
+#				army.get_node('UnitDetection').look_at(positions[unit]['R'])
