@@ -73,8 +73,6 @@ func update_positions(positions):
 		for army in get_tree().get_nodes_in_group('army'):
 			if unit == army.unit_id and army.player != Global.player:
 				army.position = positions[unit]['P']
-				army.rotate_target
-#				for marine in army.get_node('Units').get_children():
-#					marine.rotate_to(positions[unit]['R'])
-##					marine.rotation = positions[unit]['R']
-#				army.get_node('UnitDetection').look_at(positions[unit]['R'])
+				for marine in army.get_node('Units').get_children():
+					marine.rotate_to(positions[unit]['R'])
+				army.get_node('UnitDetection').look_at(positions[unit]['R'])

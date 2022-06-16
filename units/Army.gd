@@ -34,14 +34,6 @@ func _ready():
 	$CombineArea.connect('body_entered', self, 'combine_army')
 	$Timer.connect('timeout', self, 'check_for_armies')
 	
-#	player = Global.player
-#
-#	Server.RequestCounter(player)
-#	while Global.waiting_for_server:
-#		yield(get_tree().create_timer(.01), "timeout")
-#	Global.waiting_for_server = true
-#	unit_id = Global.unit_counter
-	
 	if target_position.length() >0:
 		_change_state(STATES.FOLLOW)
 	else:
@@ -101,12 +93,11 @@ func _process(delta):
 		return
 		
 	if rotating:
-		for unit in $Units.get_children():
-			unit.rotate_to(get_global_mouse_position())
-		$UnitDetection.look_at(get_global_mouse_position())
 		rotate_target = get_global_mouse_position()
-	else:
-		rotate_target = target_point_world
+
+	for unit in $Units.get_children():
+		unit.rotate_to(rotate_target)
+	$UnitDetection.look_at(rotate_target)
 
 	Server.SendUnitState({unit_id:{'T':OS.get_system_time_msecs(),
 	  "P":get_global_position(), "R":rotate_target}})
@@ -120,6 +111,8 @@ func _process(delta):
 			_change_state(STATES.IDLE)
 			return
 		target_point_world = path[0]
+		rotate_target = target_point_world
+
 
 
 func move_to(world_position):
