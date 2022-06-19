@@ -3,7 +3,7 @@ extends Node
 var network = NetworkedMultiplayerENet.new()
 var ip = '127.0.0.1'
 var port = 4099
-var max_players = 2
+var max_players = 4
 var game_started = false
 
 var players = {}
@@ -35,8 +35,9 @@ func StartServer():
 	network.connect("peer_connected", self, "_Peer_Connected")
 	network.connect("peer_disconnected", self, "_Peer_Disconnected")
 func _Peer_Connected(player_id):
-	var new_player_assignment = player_assignments.min() + 1
+	var new_player_assignment = player_assignments.max() + 1
 	player_assignments.append(new_player_assignment)
+	
 	var new_player = 'P' + str(new_player_assignment)
 	players[player_id] = new_player
 	print('User ' + str(player_id) + " Connected as " + new_player)
@@ -66,9 +67,10 @@ func SendStart():
 	game_started = true
 	Global.unit_counter = 1
 	Global.player = "P1"
+	Global.num_players = player_assignments.max()
 	for player in players:
 		ids[players[player]] = player
-		rpc_id(player, 'StartGame', players[player])
+		rpc_id(player, 'StartGame', players[player], player_assignments.max())
 	get_tree().change_scene("res://Worlds/Combat.tscn")
 	
 remote func ReceiveUnitState(unit_state):
@@ -112,9 +114,10 @@ remote func ReceiveCounter(count):
 	Global.waiting_for_server = false
 remote func ReceivePlayerNum(num):
 	print("You are " + num)
-remote func StartGame(player):
+remote func StartGame(player, num_players):
 	print('starting')
 	Global.player = player
+	Global.num_players = num_players
 	get_tree().change_scene("res://Worlds/Combat.tscn")
 
 func SendUnitState(unit_state):

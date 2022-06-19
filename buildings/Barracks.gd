@@ -20,7 +20,7 @@ func _ready():
 	
 func _on_timeout():
 	var units = $CaptureZone.get_overlapping_bodies()
-	var players = {'P0': 0, 'P1': 0, 'P2': 0}
+	var players = {'P0': 0, 'P1': 0, 'P2': 0, 'P3': 0, 'P4': 0}
 	for unit in units:
 		if unit.is_in_group('army'):
 			players[unit.player] += unit.army_units['Marine']
@@ -47,16 +47,12 @@ func _on_timeout():
 	$Progress.value = capture_status
 
 func update_owner():
-	if player == "P1":
-		get_node("icon").modulate = Color.blue
-		$Progress.tint_progress = Color.blue
-		$Outline.modulate = Color.blue
-		$RallyFlag.modulate = Color.blue
-	elif player == "P2":
-		get_node("icon").modulate = Color.red
-		$Progress.tint_progress = Color.red
-		$Outline.modulate = Color.red
-		$RallyFlag.modulate = Color.red
+	
+	if player in ["P1", "P2", "P3", "P4"]:
+		get_node("icon").modulate = Global.player_colors[player]
+		$Progress.tint_progress = Global.player_colors[player]
+		$Outline.modulate = Global.player_colors[player]
+		$RallyFlag.modulate = Global.player_colors[player]
 	else:
 		deselect()
 		get_node('icon').modulate = Color.gray

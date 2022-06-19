@@ -260,37 +260,37 @@ position = Vector2( 674.046, 4368.94 )
 [node name="P4" type="Position2D" parent="StartingPos"]
 position = Vector2( 5735.47, 715.43 )
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Racks" type="Node2D" parent="."]
 
-[node name="P1" parent="Node2D" instance=ExtResource( 4 )]
+[node name="P1" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 452.854, 451.723 )
 
-[node name="P4" parent="Node2D" instance=ExtResource( 4 )]
-position = Vector2( 5980.18, 451.723 )
-
-[node name="P3" parent="Node2D" instance=ExtResource( 4 )]
-position = Vector2( 452.854, 4499.06 )
-
-[node name="P2" parent="Node2D" instance=ExtResource( 4 )]
+[node name="P2" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 5980.18, 4535.42 )
 
-[node name="Barracks5" parent="Node2D" instance=ExtResource( 4 )]
+[node name="P3" parent="Racks" instance=ExtResource( 4 )]
+position = Vector2( 452.854, 4499.06 )
+
+[node name="P4" parent="Racks" instance=ExtResource( 4 )]
+position = Vector2( 5980.18, 451.723 )
+
+[node name="Barracks5" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 2453.87, 2837.35 )
 
-[node name="Barracks7" parent="Node2D" instance=ExtResource( 4 )]
+[node name="Barracks7" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 2166.99, 1888.82 )
 
-[node name="Barracks6" parent="Node2D" instance=ExtResource( 4 )]
+[node name="Barracks6" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 3829.79, 2463.65 )
 
-[node name="Barracks8" parent="Node2D" instance=ExtResource( 4 )]
+[node name="Barracks8" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 3648.29, 4368.94 )
 
-[node name="Barracks9" parent="Node2D" instance=ExtResource( 4 )]
+[node name="Barracks9" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 306.754, 2018.94 )
 
-[node name="Barracks10" parent="Node2D" instance=ExtResource( 4 )]
+[node name="Barracks10" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 2922.25, 321.598 )
 
-[node name="Barracks11" parent="Node2D" instance=ExtResource( 4 )]
+[node name="Barracks11" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 5267.09, 2767.85 )

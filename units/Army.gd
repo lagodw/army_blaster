@@ -45,16 +45,12 @@ func _ready():
 			army_units['Marine'] += 1
 	
 	self.add_to_group(player)
-	if player == "P1":
-		get_node("Flag").modulate = Color.blue
-		get_node("Outline").modulate = Color.blue
-		get_node("NumOutline").modulate = Color.blue
-		get_node("UnitCount").add_color_override("font_color", Color.blue)
-	elif player == "P2":
-		get_node("Flag").modulate = Color.red
-		get_node("Outline").modulate = Color.red
-		get_node("NumOutline").modulate = Color.red
-		get_node("UnitCount").add_color_override("font_color", Color.red)
+	
+	get_node("Flag").modulate = Global.player_colors[player]
+	get_node("Outline").modulate = Global.player_colors[player]
+	get_node("NumOutline").modulate = Global.player_colors[player]
+	get_node("UnitCount").add_color_override("font_color", Global.player_colors[player])
+	
 	update_counter()
 	
 	$Health.max_value = 100

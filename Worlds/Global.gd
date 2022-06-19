@@ -3,8 +3,15 @@ extends Node
 var unit_stats = {
 	'marine': {'damage': 0.1, 'hp': 1}
 }
+var player_colors = {
+	'P1': Color.blue,
+	'P2': Color.red,
+	'P3': Color.green,
+	'P4': Color.yellow
+}
 
 var player = "P0"
+var num_players = 0
 var waiting_for_server = true
 var game_mode = 'single'
 
