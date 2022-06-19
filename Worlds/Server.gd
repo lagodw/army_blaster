@@ -4,8 +4,10 @@ var network = NetworkedMultiplayerENet.new()
 var ip = '127.0.0.1'
 var port = 4099
 var max_players = 2
+var game_started = false
 
 var players = {}
+var player_assignments = []
 var opponents = {}
 var player_moves = {}
 var player_deployments = {}
@@ -25,17 +27,32 @@ func StartServer():
 	print('Server Started')
 	Global.game_mode = 'server'
 	
+	player_assignments = [1]
+	get_node("/root/Main_Menu/Lobby").visible = true
+	get_node("/root/Main_Menu/Lobby/P1").visible = true
+	get_node("/root/Main_Menu/Lobby/Start").visible = true
+	
 	network.connect("peer_connected", self, "_Peer_Connected")
 	network.connect("peer_disconnected", self, "_Peer_Disconnected")
 func _Peer_Connected(player_id):
-	var new_player = 'P' + str(len(players) + 2)
+	var new_player_assignment = player_assignments.min() + 1
+	player_assignments.append(new_player_assignment)
+	var new_player = 'P' + str(new_player_assignment)
 	players[player_id] = new_player
 	print('User ' + str(player_id) + " Connected as " + new_player)
 	
 	rpc_id(player_id, 'ReceivePlayerNum', new_player)
-	if new_player == "P2":
-		SendStart()
+	if not game_started:
+		get_node("/root/Main_Menu/Lobby/"+new_player).visible = true
+#	if new_player == "P2":
+#		SendStart()
 func _Peer_Disconnected(player_id):
+	var player_assignment = players[player_id][1]
+	
+	if not game_started:
+		get_node("/root/Main_Menu/Lobby/"+players[player_id]).visible = false
+	
+	player_assignments.erase(int(player_assignment))
 	players.erase(player_id)
 	print('User ' + str(player_id) + " Disconnected")
 	print('Remaining players: ' + str(players))
@@ -46,6 +63,7 @@ remote func SendCounter(player):
 	Global.unit_counter += 1
 
 func SendStart():
+	game_started = true
 	Global.unit_counter = 1
 	Global.player = "P1"
 	for player in players:
@@ -78,6 +96,8 @@ func ConnectToServer():
 func _OnConnectionFailed():
 	print('Failed to connect')
 func _OnConnectionSucceeded():
+	get_node("/root/Main_Menu/Lobby").visible = true
+	get_node("/root/Main_Menu/Lobby/WaitingMsg").visible = true
 	print('Successfully connected')
 	
 func RequestCounter(player):

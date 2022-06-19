@@ -7,8 +7,8 @@
 [ext_resource path="res://units/circle.png" type="Texture" id=5]
 [ext_resource path="res://units/flag.png" type="Texture" id=6]
 
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 31.3268, 27.1886 )
+[sub_resource type="CircleShape2D" id=2]
+radius = 75.748
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 443.511
@@ -26,7 +26,7 @@ texture = ExtResource( 1 )
 
 [node name="BlockUnit" type="CollisionShape2D" parent="."]
 position = Vector2( -8.84357, 18.3846 )
-rotation = -0.787143
+rotation = -0.614356
 scale = Vector2( 0.997106, 1 )
 shape = SubResource( 2 )
 

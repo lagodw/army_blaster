@@ -8,6 +8,8 @@ func _ready():
 	get_node("MainMenu/QuitButton").connect("pressed", self, "quit_game")
 	
 	get_node("OptionsMenu/CloseOptions").connect('pressed', self, "close_options")
+	
+	get_node("Lobby/Start").connect("pressed", self, "start_game")
 
 func start_server():
 	Server.StartServer()
@@ -17,8 +19,7 @@ func connect_server():
 	Server.ConnectToServer()
 	
 func start_game():
-	Global.game_mode = 'single'
-	get_tree().change_scene("res://Worlds/Combat.tscn")
+	Server.SendStart()
 
 func options_menu():
 	get_node("OptionsMenu").visible = true

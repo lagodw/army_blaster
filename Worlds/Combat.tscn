@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Worlds/road_tileset.png" type="Texture" id=1]
 [ext_resource path="res://themes/NEW DONK CITY tileset.png" type="Texture" id=2]
@@ -9,6 +9,9 @@
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 72, 136, 16, 136, 8, 8, 80, 8 )
+
+[sub_resource type="ConvexPolygonShape2D" id=5]
+points = PoolVector2Array( 64, 64, 0, 64, 0, 0, 64, 0 )
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 points = PoolVector2Array( 256, 376, 8, 376, 8, 0, 256, 0 )
@@ -216,9 +219,16 @@ points = PoolVector2Array( 152, 72, 0, 72, 0, 0, 152, 0 )
 13/navigation_offset = Vector2( 0, 0 )
 13/shape_offset = Vector2( 0, 0 )
 13/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+13/shape = SubResource( 5 )
 13/shape_one_way = false
-13/shape_one_way_margin = 0.0
-13/shapes = [  ]
+13/shape_one_way_margin = 1.0
+13/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 5 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+} ]
 13/z_index = 0
 
 [node name="Map" type="Node2D"]
@@ -236,39 +246,6 @@ current = true
 zoom = Vector2( 4, 4 )
 script = ExtResource( 7 )
 
-[node name="Barracks" parent="." instance=ExtResource( 4 )]
-position = Vector2( 452.854, 451.723 )
-
-[node name="Barracks2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 5980.18, 451.723 )
-
-[node name="Barracks3" parent="." instance=ExtResource( 4 )]
-position = Vector2( 452.854, 4499.06 )
-
-[node name="Barracks4" parent="." instance=ExtResource( 4 )]
-position = Vector2( 5980.18, 4499.06 )
-
-[node name="Barracks5" parent="." instance=ExtResource( 4 )]
-position = Vector2( 2453.87, 2837.35 )
-
-[node name="Barracks7" parent="." instance=ExtResource( 4 )]
-position = Vector2( 2166.99, 1888.82 )
-
-[node name="Barracks6" parent="." instance=ExtResource( 4 )]
-position = Vector2( 3829.79, 2463.65 )
-
-[node name="Barracks8" parent="." instance=ExtResource( 4 )]
-position = Vector2( 3648.29, 4368.94 )
-
-[node name="Barracks9" parent="." instance=ExtResource( 4 )]
-position = Vector2( 306.754, 2018.94 )
-
-[node name="Barracks10" parent="." instance=ExtResource( 4 )]
-position = Vector2( 2922.25, 321.598 )
-
-[node name="Barracks11" parent="." instance=ExtResource( 4 )]
-position = Vector2( 5267.09, 2767.85 )
-
 [node name="StartingPos" type="Node2D" parent="."]
 
 [node name="P1" type="Position2D" parent="StartingPos"]
@@ -276,3 +253,44 @@ position = Vector2( 452.854, 755.923 )
 
 [node name="P2" type="Position2D" parent="StartingPos"]
 position = Vector2( 5664.23, 4575.15 )
+
+[node name="P3" type="Position2D" parent="StartingPos"]
+position = Vector2( 674.046, 4368.94 )
+
+[node name="P4" type="Position2D" parent="StartingPos"]
+position = Vector2( 5735.47, 715.43 )
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="P1" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 452.854, 451.723 )
+
+[node name="P4" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 5980.18, 451.723 )
+
+[node name="P3" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 452.854, 4499.06 )
+
+[node name="P2" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 5980.18, 4535.42 )
+
+[node name="Barracks5" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 2453.87, 2837.35 )
+
+[node name="Barracks7" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 2166.99, 1888.82 )
+
+[node name="Barracks6" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 3829.79, 2463.65 )
+
+[node name="Barracks8" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 3648.29, 4368.94 )
+
+[node name="Barracks9" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 306.754, 2018.94 )
+
+[node name="Barracks10" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 2922.25, 321.598 )
+
+[node name="Barracks11" parent="Node2D" instance=ExtResource( 4 )]
+position = Vector2( 5267.09, 2767.85 )
