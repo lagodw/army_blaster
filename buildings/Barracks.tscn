@@ -56,10 +56,10 @@ __meta__ = {
 }
 
 [node name="Rally" type="Position2D" parent="."]
-position = Vector2( 525.629, 318.707 )
+position = Vector2( 221.192, 166.489 )
 
 [node name="SpawnPoint" type="Position2D" parent="."]
-position = Vector2( 221.192, 166.489 )
+position = Vector2( 125.025, 111.489 )
 
 [node name="Outline" type="Sprite" parent="."]
 visible = false
@@ -68,6 +68,6 @@ texture = ExtResource( 5 )
 
 [node name="RallyFlag" type="Sprite" parent="."]
 visible = false
-position = Vector2( 525.629, 318.707 )
+position = Vector2( 221.192, 166.489 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )

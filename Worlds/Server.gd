@@ -109,13 +109,11 @@ func RequestCounter(player):
 	else:
 		rpc_id(1, 'SendCounter', player)
 remote func ReceiveCounter(count):
-	print('received count ' + str(count))
 	Global.unit_counter = count
 	Global.waiting_for_server = false
 remote func ReceivePlayerNum(num):
 	print("You are " + num)
 remote func StartGame(player, num_players):
-	print('starting')
 	Global.player = player
 	Global.num_players = num_players
 	get_tree().change_scene("res://Worlds/Combat.tscn")

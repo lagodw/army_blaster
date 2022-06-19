@@ -6,8 +6,8 @@ var unit_stats = {
 var player_colors = {
 	'P1': Color.blue,
 	'P2': Color.red,
-	'P3': Color.green,
-	'P4': Color.yellow
+	'P3': Color.darkgreen,
+	'P4': Color.goldenrod
 }
 
 var player = "P0"

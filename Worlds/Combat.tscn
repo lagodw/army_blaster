@@ -277,9 +277,6 @@ position = Vector2( 5980.18, 451.723 )
 [node name="Barracks5" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 2453.87, 2837.35 )
 
-[node name="Barracks7" parent="Racks" instance=ExtResource( 4 )]
-position = Vector2( 2166.99, 1888.82 )
-
 [node name="Barracks6" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 3829.79, 2463.65 )
 
@@ -294,3 +291,6 @@ position = Vector2( 2922.25, 321.598 )
 
 [node name="Barracks11" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 5267.09, 2767.85 )
+
+[node name="Barracks" parent="." instance=ExtResource( 4 )]
+position = Vector2( 2179.94, 1875.23 )
