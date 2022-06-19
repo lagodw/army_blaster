@@ -6,7 +6,7 @@ var drag_start = Vector2.ZERO  # Location where drag began.
 var drag_end = Vector2.ZERO
 var select_rect = RectangleShape2D.new()  # Collision shape for drag box.
 
-var player = "P1"
+var player
 
 
 func _ready():

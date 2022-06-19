@@ -19,7 +19,8 @@ const DRAW_COLOR = Color('#fff')
 # here the id 0 corresponds to the grey tile, the obstacles
 var obstacles = []
 onready var obstacle_sizes = {'tree': Vector2(1,2), 'building': Vector2(4,6),
-'car': Vector2(2, 1), 'bench': Vector2(2, 1), 'shrub': Vector2(2, 1), 'light': Vector2(1, 2)}
+'car': Vector2(2, 1), 'bench': Vector2(2, 1), 'shrub': Vector2(2, 1), 'light': Vector2(1, 2),
+'fence_h': Vector2(1, 1), 'fence_v': Vector2(1, 1)}
 onready var _half_cell_size = cell_size / 2
 onready var all_cells = get_used_cells()
 

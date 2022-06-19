@@ -1,16 +1,16 @@
 extends Camera2D
 
 const MAX_ZOOM_LEVEL = .5
-const MIN_ZOOM_LEVEL = 8
+const MIN_ZOOM_LEVEL = 6
 const ZOOM_INCREMENT = 0.2
 
 var scroll_margin = 20
 var scroll_amount = 25
 
-var LEFT_LIMIT = -1000
-var TOP_LIMIT = -1000
-var RIGHT_LIMIT = 41000
-var BOTTOM_LIMIT = 24000
+var LEFT_LIMIT = 0
+var TOP_LIMIT = 0
+var RIGHT_LIMIT = 6463
+var BOTTOM_LIMIT = 4992
 
 signal moved()
 signal zoomed()

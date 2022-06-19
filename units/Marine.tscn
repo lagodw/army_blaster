@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 8, 8 )
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=18]
 resource_name = "Shoot_E"
 length = 4.0
 loop = true
@@ -309,7 +309,7 @@ frame = 60
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_speed = 5.0
-anims/Shoot_E = SubResource( 2 )
+anims/Shoot_E = SubResource( 18 )
 anims/Shoot_N = SubResource( 3 )
 anims/Shoot_NE = SubResource( 4 )
 anims/Shoot_NW = SubResource( 5 )
