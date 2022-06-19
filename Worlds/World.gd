@@ -46,11 +46,10 @@ func get_units_in_box(event):
 				if unit.collider.is_in_group('building') and unit.collider.player == player:
 					unit.collider.add_to_group('new_selected')
 				
-		if Input.is_action_pressed('shift'):
+		if Input.is_action_pressed('shift') or len(get_tree().get_nodes_in_group('new_selected')) == 0:
 			pass
 		else:
-			if len(get_tree().get_nodes_in_group('new_selected')) > 0:
-				get_tree().call_group('selected', 'deselect')
+			get_tree().call_group('selected', 'deselect')
 		
 		get_tree().call_group('new_selected', 'select')
 			

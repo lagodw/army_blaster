@@ -8,7 +8,7 @@
 [ext_resource path="res://units/flag.png" type="Texture" id=6]
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 75.748
+radius = 144.814
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 443.511
@@ -16,8 +16,6 @@ radius = 443.511
 [node name="Barracks" type="KinematicBody2D" groups=[
 "building",
 ]]
-collision_layer = 3
-collision_mask = 2
 script = ExtResource( 2 )
 
 [node name="icon" type="Sprite" parent="."]
