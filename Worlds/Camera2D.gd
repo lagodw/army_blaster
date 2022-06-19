@@ -20,33 +20,32 @@ var _drag = false
 
 var size
 
-func _physics_process(delta):
-	var mouse_pos = get_viewport().get_mouse_position()
-	size = get_viewport_rect().size
-	var width = size.x
-	var height = size.y
-			
-	if mouse_pos.x >= size.x - scroll_margin and \
-	position.x <= RIGHT_LIMIT - (width * _current_zoom_level) / 2:
-		position.x += scroll_amount
-	elif mouse_pos.x <= scroll_margin and \
-	position.x >= LEFT_LIMIT + (width * _current_zoom_level) / 2:
-		position.x -= scroll_amount
-	if mouse_pos.y >= size.y - scroll_margin and \
-	position.y <= BOTTOM_LIMIT - (height * _current_zoom_level) / 2:
-		position.y += scroll_amount
-	elif mouse_pos.y <= scroll_margin and \
-	position.y >= TOP_LIMIT + (height * _current_zoom_level) / 2:
-		position.y -= scroll_amount
-		
-
-
 func _input(event):
-	if event.is_action("cam_zoom_in"):
+	if event.is_action_pressed("cam_drag"):
+		_drag = true
+	elif event.is_action_released("cam_drag"):
+		_drag = false
+	elif event.is_action("cam_zoom_in"):
 		_update_zoom(-ZOOM_INCREMENT, get_global_mouse_position())
 	elif event.is_action("cam_zoom_out"):
 		_update_zoom(ZOOM_INCREMENT, get_global_mouse_position())
-
+	elif event is InputEventMouseMotion && _drag:
+		size = get_viewport_rect().size
+		var width = size.x
+		var height = size.y
+		var new_position = self.position - event.relative * _current_zoom_level
+		new_position.x = clamp(new_position.x, LEFT_LIMIT + (width * _current_zoom_level) / 2
+		, RIGHT_LIMIT - (width * _current_zoom_level) / 2)
+		new_position.y = clamp(new_position.y, TOP_LIMIT + (height * _current_zoom_level) / 2
+		, BOTTOM_LIMIT - (height * _current_zoom_level) / 2)
+		
+		if width > (RIGHT_LIMIT - LEFT_LIMIT) / _current_zoom_level:
+			new_position.x = (RIGHT_LIMIT + LEFT_LIMIT) / 2
+		if height > (BOTTOM_LIMIT - TOP_LIMIT) / _current_zoom_level:
+			new_position.y = (BOTTOM_LIMIT + TOP_LIMIT) / 2
+			
+		self.position = new_position
+		emit_signal("moved")
 
 func _update_zoom(incr, zoom_anchor):
 	if check_for_panel(zoom_anchor):

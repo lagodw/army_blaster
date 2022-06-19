@@ -40,7 +40,7 @@ func get_units_in_box(event):
 				has_unit = true
 		if not has_unit:
 			for unit in new_selected:
-				if unit.collider.is_in_group('building'):
+				if unit.collider.is_in_group('building') and unit.collider.player == player:
 					unit.collider.add_to_group('new_selected')
 				
 		if Input.is_action_pressed('shift'):
