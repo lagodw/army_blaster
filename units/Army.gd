@@ -58,6 +58,9 @@ func _ready():
 	$Health.max_value = 100
 	update_hp()
 
+func _physics_process(delta):
+	$MoveTarget.global_position = target_position
+
 func _input(event):
 	if event.is_action_pressed('touch') and is_in_group('selected'):
 		target_position = get_global_mouse_position()
@@ -81,9 +84,12 @@ func _change_state(new_state):
 		# The index 0 is the starting cell
 		# we don't want the character to move back to it in this example
 		target_point_world = path[1]
+		if is_in_group('selected'):
+			$MoveTarget.visible = true
 	elif new_state == STATES.IDLE:
 		for unit in $Units.get_children():
 			unit.stop_animation()
+		$MoveTarget.visible = false
 	_state = new_state
 
 func _process(delta):
@@ -126,11 +132,14 @@ func move_to(world_position):
 
 func select():
 	$Outline.visible = true
+	if _state == STATES.FOLLOW:
+		$MoveTarget.visible = true
 	remove_from_group('new_selected')
 	add_to_group('selected')
 	
 func deselect():
 	$Outline.visible = false
+	$MoveTarget.visible = false
 	remove_from_group('selected')
 
 func combine_army(area):
