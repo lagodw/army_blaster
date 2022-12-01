@@ -1,7 +1,7 @@
 extends Control
 
 func _ready():
-	get_node("MainMenu/Connect").connect("pressed", self, "connect_server")
+	get_node("MainMenu/Join").connect("pressed", self, "join_server")
 	get_node("MainMenu/Server").connect("pressed", self, "start_server")
 	get_node("MainMenu/OptionsButton").connect("pressed", self, "options_menu")
 	get_node("MainMenu/QuitButton").connect("pressed", self, "quit_game")
@@ -13,7 +13,7 @@ func _ready():
 func start_server():
 	Server.StartServer()
 
-func connect_server():
+func join_server():
 	Global.game_mode = 'server'
 	Server.ConnectToServer()
 
@@ -37,9 +37,9 @@ func _input(event):
 	elif event is InputEventKey and event.scancode == KEY_Q:
 		if get_node("MainMenu").visible == true:
 			quit_game()
-	elif event is InputEventKey and event.scancode == KEY_C:
+	elif event is InputEventKey and event.scancode == KEY_J:
 		if get_node("MainMenu").visible == true:
-			connect_server()
+			join_server()
 	
 
 func close_options():

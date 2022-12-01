@@ -29,10 +29,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Connect" type="Button" parent="MainMenu"]
+[node name="Join" type="Button" parent="MainMenu"]
 margin_right = 366.0
 margin_bottom = 20.0
-text = "Connect"
+text = "Join Game (J)"
 
 [node name="Server" type="Button" parent="MainMenu"]
 margin_top = 24.0
