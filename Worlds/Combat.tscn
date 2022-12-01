@@ -249,7 +249,7 @@ script = ExtResource( 7 )
 [node name="StartingPos" type="Node2D" parent="."]
 
 [node name="P1" type="Position2D" parent="StartingPos"]
-position = Vector2( 452.854, 755.923 )
+position = Vector2( 452.854, 715.43 )
 
 [node name="P2" type="Position2D" parent="StartingPos"]
 position = Vector2( 5664.23, 4575.15 )
@@ -259,6 +259,18 @@ position = Vector2( 674.046, 4368.94 )
 
 [node name="P4" type="Position2D" parent="StartingPos"]
 position = Vector2( 5735.47, 715.43 )
+
+[node name="Camera_P1" type="Position2D" parent="StartingPos"]
+position = Vector2( 2046.73, 1195.79 )
+
+[node name="Camera_P2" type="Position2D" parent="StartingPos"]
+position = Vector2( 4423.4, 3494.25 )
+
+[node name="Camera_P3" type="Position2D" parent="StartingPos"]
+position = Vector2( 2046.73, 3494.25 )
+
+[node name="Camera_P4" type="Position2D" parent="StartingPos"]
+position = Vector2( 4423.4, 1195.79 )
 
 [node name="Racks" type="Node2D" parent="."]
 

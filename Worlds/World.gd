@@ -10,7 +10,7 @@ var player
 
 func _ready():
 	player = Global.player
-	print(Global.num_players)
+
 	for i in range(1, Global.num_players + 1):
 		var p = 'P' + str(i)
 		var start = get_node("StartingPos/" + p)
@@ -20,6 +20,8 @@ func _ready():
 		get_node("Racks/" + p + '/RallyFlag').global_position = start.global_position
 		if p == player:
 			Global.spawn_army(player, start.position, start.position)
+			
+	$Camera2D.global_position = get_node("StartingPos/Camera_" + player).global_position
 
 func get_units_in_box(event):
 	if event.pressed:
