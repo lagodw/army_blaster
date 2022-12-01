@@ -40,22 +40,16 @@ margin_right = 366.0
 margin_bottom = 44.0
 text = "Start Server (S)"
 
-[node name="StartButton" type="Button" parent="MainMenu"]
+[node name="OptionsButton" type="Button" parent="MainMenu"]
 margin_top = 48.0
 margin_right = 366.0
 margin_bottom = 68.0
-text = "Single Player"
-
-[node name="OptionsButton" type="Button" parent="MainMenu"]
-margin_top = 72.0
-margin_right = 366.0
-margin_bottom = 92.0
 text = "Options (O)"
 
 [node name="QuitButton" type="Button" parent="MainMenu"]
-margin_top = 96.0
+margin_top = 72.0
 margin_right = 366.0
-margin_bottom = 116.0
+margin_bottom = 92.0
 text = "Quit (Q)"
 
 [node name="Lobby" type="VBoxContainer" parent="."]

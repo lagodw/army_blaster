@@ -30,7 +30,7 @@ shape = SubResource( 1 )
 
 [node name="Units" type="Node2D" parent="."]
 
-[node name="Marine" parent="Units" instance=ExtResource( 1 )]
+[node name="Marine1" parent="Units" instance=ExtResource( 1 )]
 
 [node name="Outline" type="Sprite" parent="."]
 visible = false
@@ -72,12 +72,13 @@ collision_mask = 2
 polygon = PoolVector2Array( -0.994446, -2.97296, 448, -512, 1336, 0, 448, 512 )
 
 [node name="UnitCount" type="Label" parent="."]
-margin_left = -7.92171
-margin_top = -115.91
-margin_right = 10.0783
-margin_bottom = -87.9098
+margin_left = -22.8002
+margin_top = -115.7
+margin_right = 22.1998
+margin_bottom = -87.7
 custom_fonts/font = SubResource( 3 )
 text = "1"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

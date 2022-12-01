@@ -59,7 +59,7 @@ __meta__ = {
 position = Vector2( 221.192, 166.489 )
 
 [node name="SpawnPoint" type="Position2D" parent="."]
-position = Vector2( 125.025, 111.489 )
+position = Vector2( 163.942, 130.125 )
 
 [node name="Outline" type="Sprite" parent="."]
 visible = false

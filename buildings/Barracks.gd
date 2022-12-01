@@ -23,7 +23,8 @@ func _on_timeout():
 	var players = {'P0': 0, 'P1': 0, 'P2': 0, 'P3': 0, 'P4': 0}
 	for unit in units:
 		if unit.is_in_group('army'):
-			players[unit.player] += unit.army_units['Marine']
+			players[unit.player] += unit.army_units['Marine'] + \
+			unit.army_units['MarineTen'] * 10 + unit.army_units['MarineHundred'] * 100
 	
 	var max_player
 	var max_amount = 0

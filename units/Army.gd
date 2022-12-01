@@ -2,6 +2,8 @@ extends KinematicBody2D
 class_name Army
 
 export (PackedScene) var Marine = preload("res://units/Marine.tscn")
+export (PackedScene) var MarineTen = preload("res://units/Marine10.tscn")
+export (PackedScene) var MarineHundred = preload("res://units/Marine100.tscn")
 
 export (int) var speed = 250
 export (PackedScene) var Bullet = preload("res://units/Bullet.tscn")
@@ -20,7 +22,7 @@ var last_position = Vector2()
 
 export var player = "P1"
 
-var army_units = {'Marine': 0}
+var army_units = {'Marine': 0, 'MarineTen': 0, 'MarineHundred': 0}
 var hitpoints = 1
 
 var unit_id
@@ -136,8 +138,16 @@ func combine_army(area):
 		if self.get_instance_id() < area.get_instance_id():
 			var offset = global_position - area.global_position
 			for unit in area.get_node('Units').get_children():
-				army_units['Marine'] += 1
-				unit.name = "Marine" + str(army_units['Marine'])
+				#TODO: switch this to a unit property to distinguish type
+				if unit.name[6] == "T":
+					army_units['MarineTen'] += 1
+					unit.name = "MarineTen" + str(army_units['MarineTen'])
+				elif unit.name[6] == "H":
+					army_units['MarineHundred'] += 1
+					unit.name = "MarineHundred" + str(army_units['MarineHundred'])
+				else:
+					army_units['Marine'] += 1
+					unit.name = "Marine" + str(army_units['Marine'])
 				area.get_node('Units').remove_child(unit)
 				$Units.add_child(unit)
 				unit.position -= offset
@@ -162,9 +172,26 @@ func order_shoot():
 		unit.shoot()
 		
 func update_counter():
+	# Sometimes when merging the names get messed up and end up as @Marine5@@20
+	# https://godotengine.org/qa/82028/how-to-get-a-name-with-all-signs
+	# Strip off the extra stuff
+	for unit in get_node("Units").get_children():
+		if unit.name[0] == '@':
+			unit.name = unit.name.split('@')[1]
+	if army_units['Marine'] >= 10:
+		for i in range(army_units['Marine'], army_units['Marine'] - 10, -1):
+			get_node("Units/Marine" + str(i)).queue_free()
+		army_units['Marine'] -= 10
+		spawn_unit('MarineTen')
+	if army_units['MarineTen'] >= 10:
+		for i in range(army_units['MarineTen'], army_units['MarineTen'] - 10, -1):
+			get_node("Units/MarineTen" + str(i)).queue_free()
+		army_units['MarineTen'] -= 10
+		spawn_unit('MarineHundred')
+
 	var count = 0
-	for unit in army_units:
-		count += army_units[unit]
+	count = army_units['Marine'] + army_units['MarineTen'] * 10 + \
+	  army_units['MarineHundred'] * 100
 	$UnitCount.text = str(count)
 	var circle_scale = min(.2 + count * .025, .4)
 	$Outline.scale = Vector2(circle_scale, circle_scale)
@@ -172,11 +199,22 @@ func update_counter():
 func take_damage(dmg):
 	var new_hp = hitpoints - dmg
 	while new_hp <= 0.000001:
-		if army_units['Marine'] == 1:
+		if (army_units['Marine'] == 1) and (army_units['MarineTen'] == 0):
 			die()
 		else:
-			get_node("Units/Marine" + str(army_units['Marine'])).queue_free()
-			army_units['Marine'] -= 1
+			if army_units['Marine'] > 0:
+				get_node("Units/Marine" + str(army_units['Marine'])).queue_free()
+				army_units['Marine'] -= 1
+			elif army_units['MarineTen'] > 0:
+				get_node("Units/MarineTen" + str(army_units['MarineTen'])).queue_free()
+				army_units['MarineTen'] -= 1
+				for i in range(1, 10):
+					spawn_unit('Marine')
+			elif army_units['MarineHundred'] > 0:
+				get_node("Units/MarineHundred" + str(army_units['MarineHundred'])).queue_free()
+				army_units['MarineHundred'] -= 1
+				for i in range(1, 10):
+					spawn_unit('MarineTen')
 			update_counter()
 		new_hp += 1
 	hitpoints = new_hp
@@ -188,7 +226,7 @@ func update_hp():
 		$Health.visible = true
 	else:
 		$Health.visible = false
-	$Health.value = val	
+	$Health.value = val
 	if val <= 20:
 		$Health.tint_progress = Color.lightcoral
 	elif val <= 50:
@@ -198,3 +236,24 @@ func update_hp():
 	
 func die():
 	self.queue_free()
+
+func spawn_unit(type):
+	var unit
+	if type == "Marine":
+		unit = Marine.instance()
+	elif type == "MarineTen":
+		unit = MarineTen.instance()
+	elif type == "MarineHundred":
+		unit = MarineHundred.instance()
+	army_units[type] += 1
+	unit.name = type + str(army_units[type])
+	unit.player = player
+	get_node('Units').add_child(unit)
+	
+	# spawning new units on same location will cause them to stick together
+	# add some rng just to spread them out
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	var r1 = rng.randf_range(-30.0, 30.0)
+	var r2 = rng.randf_range(-30.0, 30.0)
+	unit.global_position = self.global_position + Vector2(r1, r2)

@@ -5,7 +5,7 @@ var target = Vector2(0, 0)
 var speed = 150
 var velocity = Vector2()
 var orient = "E"
-var damage = .1
+var damage = 10
 
 var player
 

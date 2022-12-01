@@ -3,7 +3,6 @@ extends Control
 func _ready():
 	get_node("MainMenu/Connect").connect("pressed", self, "connect_server")
 	get_node("MainMenu/Server").connect("pressed", self, "start_server")
-	get_node("MainMenu/StartButton").connect("pressed", self, "start_game")
 	get_node("MainMenu/OptionsButton").connect("pressed", self, "options_menu")
 	get_node("MainMenu/QuitButton").connect("pressed", self, "quit_game")
 	
@@ -17,7 +16,7 @@ func start_server():
 func connect_server():
 	Global.game_mode = 'server'
 	Server.ConnectToServer()
-	
+
 func start_game():
 	Server.SendStart()
 

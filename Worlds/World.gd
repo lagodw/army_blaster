@@ -10,6 +10,7 @@ var player
 
 func _ready():
 	player = Global.player
+	print(Global.num_players)
 	for i in range(1, Global.num_players + 1):
 		var p = 'P' + str(i)
 		var start = get_node("StartingPos/" + p)
