@@ -10,7 +10,6 @@ var damage = 1
 var player
 
 func _ready():
-	yield(get_node("/root"), 'ready')
 	get_node("Flag").modulate = Global.player_colors[player]
 
 func _physics_process(delta):
