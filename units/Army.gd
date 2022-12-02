@@ -6,7 +6,6 @@ export (PackedScene) var MarineTen = preload("res://units/Marine10.tscn")
 export (PackedScene) var MarineHundred = preload("res://units/Marine100.tscn")
 
 export (int) var speed = 250
-export (PackedScene) var Bullet = preload("res://units/Bullet.tscn")
 
 enum STATES { IDLE, FOLLOW }
 var _state = null
@@ -26,7 +25,7 @@ var army_units = {'Marine': 0, 'MarineTen': 0, 'MarineHundred': 0}
 var hitpoints = 1
 
 var unit_id
-
+var army_count = 0
 
 func _ready():
 	set_process(true)
@@ -58,9 +57,6 @@ func _ready():
 	$Health.max_value = 100
 	update_hp()
 
-func _physics_process(delta):
-	$MoveTarget.global_position = target_position
-
 func _input(event):
 	if event.is_action_pressed('touch') and is_in_group('selected'):
 		target_position = get_global_mouse_position()
@@ -75,8 +71,6 @@ func _input(event):
 
 func _change_state(new_state):
 	if new_state == STATES.FOLLOW:
-#		for unit in $Units.get_children():
-#			unit.move_animation()
 		path = get_parent().get_node('TileMap').find_path(global_position, target_position)
 		if not path or len(path) == 1:
 			_change_state(STATES.IDLE)
@@ -116,7 +110,8 @@ func _process(delta):
 			return
 		target_point_world = path[0]
 		rotate_target = target_point_world
-
+	
+	$MoveTarget.global_position = target_position
 
 
 func move_to(world_position):
@@ -144,7 +139,13 @@ func deselect():
 
 func combine_army(area):
 	if area.is_in_group('army') and area.player == player:
-		if self.get_instance_id() < area.get_instance_id():
+		# Merge into the bigger army or if tied merge into the first created
+		var bigger_army = false
+		if (army_count > area.army_count) or (army_count == area.army_count and 
+		self.get_instance_id() < area.get_instance_id()):
+			bigger_army = true
+		
+		if bigger_army:
 			var offset = global_position - area.global_position
 			for unit in area.get_node('Units').get_children():
 				#TODO: switch this to a unit property to distinguish type
@@ -160,6 +161,10 @@ func combine_army(area):
 				area.get_node('Units').remove_child(unit)
 				$Units.add_child(unit)
 				unit.position -= offset
+				
+			if _state == STATES.IDLE:
+				target_position = area.target_position
+				_change_state(STATES.FOLLOW)
 			area.queue_free()
 			
 			if area.is_in_group('selected') and not is_in_group('selected'):
@@ -198,11 +203,10 @@ func update_counter():
 		army_units['MarineTen'] -= 10
 		spawn_unit('MarineHundred')
 
-	var count = 0
-	count = army_units['Marine'] + army_units['MarineTen'] * 10 + \
+	army_count = army_units['Marine'] + army_units['MarineTen'] * 10 + \
 	  army_units['MarineHundred'] * 100
-	$UnitCount.text = str(count)
-	var circle_scale = min(.2 + count * .025, .4)
+	$UnitCount.text = str(army_count)
+	var circle_scale = min(.2 + army_count * .025, .4)
 	$Outline.scale = Vector2(circle_scale, circle_scale)
 	
 func take_damage(dmg):
