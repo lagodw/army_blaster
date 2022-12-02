@@ -139,13 +139,18 @@ func deselect():
 
 func combine_army(area):
 	if area.is_in_group('army') and area.player == player:
+		
+		# Only want to combine armies if there is no barrier between them
+		var state_space = get_world_2d().direct_space_state
+		var sight_check = state_space.intersect_ray(position, area.position, 
+		get_node('Units').get_children(), 1, true, true)
+		if len(sight_check) > 0:
+			if sight_check.collider.name == "TileMap":
+				return
+			
 		# Merge into the bigger army or if tied merge into the first created
-		var bigger_army = false
 		if (army_count > area.army_count) or (army_count == area.army_count and 
 		self.get_instance_id() < area.get_instance_id()):
-			bigger_army = true
-		
-		if bigger_army:
 			var offset = global_position - area.global_position
 			for unit in area.get_node('Units').get_children():
 				#TODO: switch this to a unit property to distinguish type
@@ -206,8 +211,6 @@ func update_counter():
 	army_count = army_units['Marine'] + army_units['MarineTen'] * 10 + \
 	  army_units['MarineHundred'] * 100
 	$UnitCount.text = str(army_count)
-	var circle_scale = min(.2 + army_count * .025, .4)
-	$Outline.scale = Vector2(circle_scale, circle_scale)
 	
 func take_damage(dmg):
 	var new_hp = hitpoints - dmg

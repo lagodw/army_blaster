@@ -12,7 +12,7 @@ var player
 func _ready():
 	yield(self.get_parent().get_parent(), 'ready')
 	get_node("Flag").modulate = Global.player_colors[player]
-
+	
 func _physics_process(delta):
 	velocity = position.direction_to(target) * speed
 	if position.distance_to(target) > 20:
