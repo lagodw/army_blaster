@@ -89,14 +89,14 @@ func _change_state(new_state):
 func _process(delta):
 	if player != Global.player:
 		return
-		
+	
 	if rotating:
 		rotate_target = get_global_mouse_position()
-
+	
 	for unit in $Units.get_children():
 		unit.rotate_to(rotate_target)
 	$UnitDetection.look_at(rotate_target)
-
+	
 	Server.SendUnitState({unit_id:{'T':OS.get_system_time_msecs(),
 	  "P":get_global_position(), "R":rotate_target}})
 

@@ -7,13 +7,13 @@
 [ext_resource path="res://units/circle.png" type="Texture" id=5]
 [ext_resource path="res://units/flag.png" type="Texture" id=6]
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="CircleShape2D" id=1]
 radius = 144.814
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=2]
 radius = 443.511
 
-[node name="Barracks" type="KinematicBody2D" groups=[
+[node name="Barracks" type="StaticBody2D" groups=[
 "building",
 ]]
 script = ExtResource( 2 )
@@ -26,14 +26,14 @@ texture = ExtResource( 1 )
 position = Vector2( -8.84357, 18.3846 )
 rotation = -0.614356
 scale = Vector2( 0.997106, 1 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="CaptureZone" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CaptureZone"]
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 5.0

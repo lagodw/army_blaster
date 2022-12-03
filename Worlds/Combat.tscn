@@ -1,7 +1,8 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Worlds/road_tileset.png" type="Texture" id=1]
 [ext_resource path="res://themes/NEW DONK CITY tileset.png" type="Texture" id=2]
+[ext_resource path="res://units/Army.tscn" type="PackedScene" id=3]
 [ext_resource path="res://buildings/Barracks.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Worlds/TileMap.gd" type="Script" id=5]
 [ext_resource path="res://Worlds/World.gd" type="Script" id=6]
@@ -292,13 +293,13 @@ script = ExtResource( 7 )
 position = Vector2( 452.854, 715.43 )
 
 [node name="P2" type="Position2D" parent="StartingPos"]
-position = Vector2( 5664.23, 4575.15 )
+position = Vector2( 5700, 4350 )
 
 [node name="P3" type="Position2D" parent="StartingPos"]
-position = Vector2( 674.046, 4368.94 )
+position = Vector2( 700, 4350 )
 
 [node name="P4" type="Position2D" parent="StartingPos"]
-position = Vector2( 5735.47, 715.43 )
+position = Vector2( 5700, 700 )
 
 [node name="Camera_P1" type="Position2D" parent="StartingPos"]
 position = Vector2( 2179.94, 1331.79 )
@@ -318,13 +319,16 @@ position = Vector2( 4157.39, 1331.79 )
 position = Vector2( 452.854, 451.723 )
 
 [node name="P2" parent="Racks" instance=ExtResource( 4 )]
-position = Vector2( 5980.18, 4535.42 )
+position = Vector2( 6003.34, 4535.43 )
+spawn_start = Vector2( 5700, 4350 )
 
 [node name="P3" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 452.854, 4499.06 )
+spawn_start = Vector2( 700, 4350 )
 
 [node name="P4" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 5980.18, 451.723 )
+spawn_start = Vector2( 5700, 700 )
 
 [node name="Barracks5" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 2453.87, 2837.35 )
@@ -334,15 +338,21 @@ position = Vector2( 3829.79, 2463.65 )
 
 [node name="Barracks8" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 3648.29, 4368.94 )
+spawn_start = Vector2( 3650, 4150 )
 
 [node name="Barracks9" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 306.754, 2018.94 )
 
 [node name="Barracks10" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 2922.25, 321.598 )
+spawn_start = Vector2( 2750, 600 )
 
 [node name="Barracks11" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 5267.09, 2767.85 )
 
 [node name="Barracks" parent="Racks" instance=ExtResource( 4 )]
 position = Vector2( 2179.94, 1875.23 )
+
+[node name="Army" parent="." instance=ExtResource( 3 )]
+position = Vector2( 3186.9, 1472.93 )
+player = "P2"
