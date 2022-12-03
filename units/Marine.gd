@@ -52,6 +52,7 @@ func stop_animation():
 
 func rotate_to(pos):
 	var deg = rad2deg(pos.angle_to_point(global_position))
+	print(deg)
 	var new_orient = get_orientation(deg)
 	$Rotating.look_at(pos)
 	if new_orient != orient:

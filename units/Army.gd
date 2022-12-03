@@ -93,6 +93,9 @@ func _process(delta):
 	if rotating:
 		rotate_target = get_global_mouse_position()
 	
+	if (global_position - rotate_target).length() < 80:
+		rotate_target = global_position + rotate_target.normalized() * 80
+	
 	for unit in $Units.get_children():
 		unit.rotate_to(rotate_target)
 	$UnitDetection.look_at(rotate_target)
