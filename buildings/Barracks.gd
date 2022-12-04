@@ -3,6 +3,8 @@ extends KinematicBody2D
 export var player = "P0"
 var max_status = 100
 var capture_status
+var spawn_radius = 250
+export var spawn_start = Vector2() #should be global position
 
 export (PackedScene) var Marine = preload("res://units/Army.tscn")
 
@@ -15,6 +17,9 @@ func _ready():
 	$CaptureTimer.wait_time = Global.timer
 	$CaptureTimer.connect('timeout', self, '_on_timeout')
 	update_owner()
+	
+	if spawn_start:
+		set_rally(spawn_start)
 	
 	$SpawnTimer.connect('timeout', self, 'spawn_marine')
 	
@@ -62,8 +67,18 @@ func update_owner():
 func _input(event):
 	if event.is_action_pressed('touch') and is_in_group('selected'):
 		var target_position = get_global_mouse_position()
+		set_rally(target_position)
+
+func set_rally(target_position):
 		$Rally.global_position = target_position
 		$RallyFlag.global_position = target_position
+		
+		if $Rally.position.length() < spawn_radius:
+			$Rally.position = $Rally.position.normalized() * spawn_radius
+			$RallyFlag.position = $RallyFlag.position.normalized() * spawn_radius
+		
+		$SpawnPoint.position = $Rally.position.normalized() * spawn_radius
+
 		
 func spawn_marine():
 	if player == Global.player:
@@ -81,3 +96,4 @@ func deselect():
 	$Outline.visible = false
 	$RallyFlag.visible = false
 	remove_from_group('selected')
+	
