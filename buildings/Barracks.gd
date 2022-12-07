@@ -96,3 +96,4 @@ func deselect():
 	$Outline.visible = false
 	$RallyFlag.visible = false
 	remove_from_group('selected')
+	
