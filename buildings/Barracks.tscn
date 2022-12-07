@@ -13,7 +13,7 @@ radius = 144.814
 [sub_resource type="CircleShape2D" id=2]
 radius = 443.511
 
-[node name="Barracks" type="KinematicBody2D" groups=[
+[node name="Barracks" type="StaticBody2D" groups=[
 "building",
 ]]
 script = ExtResource( 2 )

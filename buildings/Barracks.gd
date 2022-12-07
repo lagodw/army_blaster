@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends StaticBody2D
 
 export var player = "P0"
 var max_status = 100
